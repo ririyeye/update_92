@@ -38,7 +38,8 @@ def update(remoteip):
     fileopt.scp_updatefile(remoteip, upload_filename, boardusr, boardpass)
 #update command
     updatefirmware.updatecmd(remoteip, upload_filename, boardusr, boardpass)
-
+#reboot after update
+    updatefirmware.rebootcmd(remoteip, boardusr, boardpass)
 
 if __name__ == "__main__":
     update('192.168.10.101')
