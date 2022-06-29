@@ -11,18 +11,19 @@ from time import sleep
 from tcping import Ping
 
 
-def change_to_update_mode(remoteip,usr,password,testmode='off'):
-    print(remoteip + " try update")    
+def change_to_update_mode(remoteip, usr, password, testmode='off'):
+    print(remoteip + " try update")
     ssh = SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(remoteip, 22, usr, password)
 
-    stdin,stdout,stderr = ssh.exec_command("ps | grep 301d | grep -v grep | wc -l")
+    stdin, stdout, stderr = ssh.exec_command(
+        "ps | grep 301d | grep -v grep | wc -l")
     ps = stdout.readlines()
     retcode = int(ps[0].strip('\n'))
-    
-    if retcode == 1 :
+
+    if retcode == 1:
         print(remoteip + "normal mode , need reboot")
         ssh.exec_command("touch /local/sirius-clean-system-flag")
         ssh.exec_command("sync")
@@ -33,27 +34,28 @@ def change_to_update_mode(remoteip,usr,password,testmode='off'):
             print("reboot " + remoteip)
             ssh.exec_command("/local/usr/bin/reboot.sh")
             sleep(5)
-    else :
+    else:
         print(remoteip + "enter update mode")
 
     ssh.close()
 
+
 def wait_ping(remoteip):
-    ping = Ping(remoteip,22,1)
+    ping = Ping(remoteip, 22, 1)
     ping.ping(1)
     result = ping.result
     retlist = list(result.raw.split('\n'))
-    succ = retlist[2].split(',')[3].split(' ')[1] # 获取成功率
+    succ = retlist[2].split(',')[3].split(' ')[1]  # 获取成功率
     return succ.strip('%')
 
+
 if __name__ == "__main__":
-    boardusr='root'
-    boardpass='artosyn'
+    boardusr = 'root'
+    boardpass = 'artosyn'
     # change_to_update_mode("192.168.1.100",boardusr,boardpass,'on')
-    change_to_update_mode("192.168.10.101",boardusr,boardpass,'on')
+    change_to_update_mode("192.168.10.101", boardusr, boardpass, 'on')
 
     # loss=wait_ping("192.168.1.105")
     # print("loss=" + loss)
 
     os.system("pause")
-
