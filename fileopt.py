@@ -23,7 +23,7 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
     print("download ok!")
 
 
-def scp_updatefile(remoteip, filename, usr, password):
+def scp_updatefile(remoteip, filename , remote_file , usr, password):
     print("upload updatefile to " + remoteip)
     ssh = SSHClient()
     ssh.load_system_host_keys()
@@ -32,8 +32,9 @@ def scp_updatefile(remoteip, filename, usr, password):
 
     # SCPCLient takes a paramiko transport as an argument
     scp = SCPClient(ssh.get_transport())
-    scp.put(filename, '/tmp/' + filename)
+    scp.put(filename, remote_file)
     scp.close()
+    ssh.close()
     print(remoteip + " upload ok")
 
 
@@ -44,6 +45,8 @@ if __name__ == "__main__":
 
     boardusr = 'root'
     boardpass = 'artosyn'
-    # scp_updatefile('192.168.1.100',filename ,boardusr,boardpass)
-    # scp_updatefile('192.168.10.101',filename , boardusr,boardpass)
+    # scp_updatefile('192.168.1.100', filename, '/tmp/' +
+    #                filename, boardusr, boardpass)
+    # scp_updatefile('192.168.10.101', filename, '/tmp/' +
+    #                filename, boardusr, boardpass)
     os.system("pause")

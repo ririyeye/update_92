@@ -35,7 +35,8 @@ def update(remoteip):
         else:
             print('retry ping' + remoteip)
 #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, upload_filename,
+                           '/tmp/' + upload_filename, boardusr, boardpass)
 #update command
     updatefirmware.updatecmd(remoteip, upload_filename, boardusr, boardpass)
 #reboot after update
