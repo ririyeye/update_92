@@ -8,7 +8,6 @@ from paramiko import SSHClient
 from scp import SCPClient
 
 def execcmd(remoteip, usr, password):
-    print(remoteip + " try reboot")
     ssh = SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -23,8 +22,6 @@ def execcmd(remoteip, usr, password):
         print(line, end="")
 
     ssh.close()
-
-    print(remoteip + " reboot ok")
 
 
 
