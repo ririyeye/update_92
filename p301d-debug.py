@@ -7,6 +7,9 @@ import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
 
+debug_filename = "test_bb_cfg"
+# debug_filename = "p301d"
+
 def execcmd(remoteip, usr, password):
     ssh = SSHClient()
     ssh.load_system_host_keys()
@@ -15,7 +18,7 @@ def execcmd(remoteip, usr, password):
 
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
-        "chmod a+x /tmp/p301d \n "
+        "chmod a+x /tmp/" + debug_filename + " \n "
         "sleep 1", get_pty=True)
 
     for line in iter(stdout.readline, ""):
@@ -30,15 +33,14 @@ if __name__ == "__main__":
     ftpcwd = '/export/yangwang'
     ftpusr = 'yangwang'
     ftppass = 'hello,wy'
-    update_filename = "p301d"
     remoteip = '192.168.10.101'
-    upload_filename = update_filename
+    upload_filename = debug_filename
 
     boardusr = 'root'
     boardpass = 'artosyn'
 
     fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
-                        update_filename, update_filename)
+                        debug_filename, debug_filename)
 
     #upload update file
     fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
