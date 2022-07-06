@@ -7,8 +7,9 @@ import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
 
-debug_filename = "test_bb_cfg"
-# debug_filename = "p301d"
+# debug_filename = "test_bb_cfg"
+debug_filename = "p301d"
+
 
 def execcmd(remoteip, usr, password):
     ssh = SSHClient()
@@ -16,16 +17,22 @@ def execcmd(remoteip, usr, password):
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(remoteip, 22, usr, password)
 
+    if debug_filename == "p301d":
+        cmds = "/tmp/p301d --board_type 0 --stream_type 1 --pipeline 0 --auto_start | grep debug\n"
+    else:
+        cmds = "/tmp/" + debug_filename + " \n "
+
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
         "chmod a+x /tmp/" + debug_filename + " \n "
+        "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
+        + cmds +
         "sleep 1", get_pty=True)
 
     for line in iter(stdout.readline, ""):
         print(line, end="")
 
     ssh.close()
-
 
 
 if __name__ == "__main__":
