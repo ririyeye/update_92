@@ -32,7 +32,12 @@ def change_to_update_mode(remoteip, usr, password, testmode='off'):
             ssh.exec_command("rm /local/sirius-clean-system-flag")
         else:
             print("reboot " + remoteip)
-            ssh.exec_command("/local/usr/bin/reboot.sh")
+            ssh.exec_command(
+                "#!/bin/sh \n "
+                "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
+                "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
+                "/local/usr/bin/reboot.sh"
+            )
             sleep(5)
     else:
         print(remoteip + "enter update mode")
@@ -53,7 +58,7 @@ if __name__ == "__main__":
     boardusr = 'root'
     boardpass = 'artosyn'
     # change_to_update_mode("192.168.1.100",boardusr,boardpass,'on')
-    change_to_update_mode("192.168.10.101", boardusr, boardpass, 'on')
+    change_to_update_mode("192.168.10.101", boardusr, boardpass, 'off')
 
     # loss=wait_ping("192.168.1.105")
     # print("loss=" + loss)

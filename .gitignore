@@ -3,3 +3,5 @@ __pycache__
 p301d
 test_bb_cfg
 *.img
+sky.txt
+gnd.txt

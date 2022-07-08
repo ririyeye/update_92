@@ -26,8 +26,8 @@ def execcmd(remoteip, usr, password):
         "#!/bin/sh \n "
         "chmod a+x /tmp/" + debug_filename + " \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-        + cmds +
-        "sleep 1", get_pty=True)
+        + cmds
+        , get_pty=True)
 
     for line in iter(stdout.readline, ""):
         print(line, end="")

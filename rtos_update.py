@@ -23,7 +23,7 @@ def execcmd(remoteip, usr, password):
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
         "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
         "/etc/artosyn-upgrade.sh /tmp/a7_rtos.nonsec.img \n "
-        "sleep 1", get_pty=True)
+        , get_pty=True)
 
     for line in iter(stdout.readline, ""):
         print(line, end="")
