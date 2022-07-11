@@ -24,7 +24,7 @@ def updatecmd(remoteip, file, usr, password):
 
     while not stdout.channel.exit_status_ready():
         if stdout.channel.recv_ready():
-            line = stdout.channel.recv(1024)
+            line = stdout.readline(1024)
             print(line, end="")
         else:
             sleep(0.1)

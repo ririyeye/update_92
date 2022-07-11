@@ -27,7 +27,7 @@ def execcmd(remoteip, usr, password):
 
     while not stdout.channel.exit_status_ready():
         if stdout.channel.recv_ready():
-            line = stdout.channel.recv(1024)
+            line = stdout.readline(1024)
             print(line, end="")
         else:
             sleep(0.1)
@@ -35,7 +35,7 @@ def execcmd(remoteip, usr, password):
     ssh.close()
 
 
-def update_rtos(remoteip):
+def update_rtos(nodename):
     f = open('cfg.json')
     js = json.load(f)
     ftpcfg = js['ftp']
@@ -47,8 +47,11 @@ def update_rtos(remoteip):
 
     upload_filename = debug_filename
 
-    boardusr = 'root'
-    boardpass = 'artosyn'
+    nod = js[nodename]
+
+    remoteip = nod['ip']
+    boardusr = nod['usr']
+    boardpass = nod['pw']
 
     fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
                         debug_filename, debug_filename)

@@ -11,6 +11,7 @@ from time import sleep
 from tcping import Ping
 import json
 
+
 def change_to_update_mode(remoteip, usr, password, testmode='off'):
     print(remoteip + " try update")
     ssh = SSHClient()
@@ -57,12 +58,11 @@ def wait_ping(remoteip):
 if __name__ == "__main__":
     f = open('cfg.json')
     js = json.load(f)
-    board = js['gnd'];
+    board = js['gnd']
     boardusr = board['usr']
     boardpass = board['pw']
     ip = board['ip']
 
     change_to_update_mode(ip, boardusr, boardpass, 'off')
-
 
     os.system("pause")

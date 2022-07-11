@@ -9,7 +9,8 @@ import os
 from time import sleep
 import json
 
-def update(remoteip):
+
+def update(nodename):
     f = open('cfg.json')
     js = json.load(f)
     ftpcfg = js['ftp']
@@ -21,10 +22,13 @@ def update(remoteip):
 
     update_filename = "artosyn-upgrade-sirius-0.0.0.1.img"
 
+    nod = js[nod]
+    remoteip = nod['ip']
+
     upload_filename = update_filename+remoteip
 
-    boardusr = 'root'
-    boardpass = 'artosyn'
+    boardusr = nod['usr']
+    boardpass = nod['pw']
 
 #check update mode
     updatemode.change_to_update_mode(remoteip, boardusr, boardpass)
@@ -47,11 +51,8 @@ def update(remoteip):
 #reboot after update
     updatefirmware.rebootcmd(remoteip, boardusr, boardpass)
 
-if __name__ == "__main__":
-    f = open('cfg.json')
-    js = json.load(f)
-    ftpcfg = js['ftp']
 
-    update(js['gnd']['ip'])
+if __name__ == "__main__":
+    update('gnd')
 
     os.system("pause")
