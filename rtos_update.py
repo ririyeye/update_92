@@ -7,6 +7,7 @@ import updatefirmware
 import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
+import json
 
 debug_filename = "a7_rtos.nonsec.img"
 
@@ -34,11 +35,15 @@ def execcmd(remoteip, usr, password):
 
 
 def update_rtos(remoteip):
-    ftpip = '192.168.200.228'
-    ftpcwd = '/export/yangwang'
-    ftpusr = 'yangwang'
-    ftppass = 'hello,wy'
-    # remoteip = '192.168.10.101'
+    f = open('cfg.json')
+    js = json.load(f)
+    ftpcfg = js['ftp']
+
+    ftpip = ftpcfg['ip']
+    ftpcwd = ftpcfg['workpath']
+    ftpusr = ftpcfg['usr']
+    ftppass = ftpcfg['pw']
+
     upload_filename = debug_filename
 
     boardusr = 'root'

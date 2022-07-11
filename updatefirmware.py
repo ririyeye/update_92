@@ -9,7 +9,7 @@ from paramiko import SSHClient
 from scp import SCPClient
 
 from time import sleep
-
+import json
 
 def updatecmd(remoteip, file, usr, password):
     print(remoteip + " try update")
@@ -60,12 +60,16 @@ def rebootcmd(remoteip, usr, password):
 
 
 if __name__ == "__main__":
-    boardusr = 'root'
-    boardpass = 'artosyn'
+    f = open('cfg.json')
+    js = json.load(f)
+    board = js['gnd'];
+    boardusr = board['usr']
+    boardpass = board['pw']
+    ip = board['ip']
     # updatecmd("192.168.1.100", "artosyn-upgrade-sirius-0.0.0.1.img",
     #           boardusr, boardpass)
     # updatecmd("192.168.10.101", "artosyn-upgrade-sirius-0.0.0.1.img",
     #           boardusr, boardpass)
-    rebootcmd("192.168.10.101", boardusr, boardpass)
+    rebootcmd(ip, boardusr, boardpass)
 
     os.system("pause")

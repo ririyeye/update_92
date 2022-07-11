@@ -1,11 +1,13 @@
 
 
+import imp
 import os
 import fileopt
 
 import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
+import json
 
 # debug_filename = "test_bb_cfg"
 debug_filename = "p301d"
@@ -36,15 +38,21 @@ def execcmd(remoteip, usr, password):
 
 
 if __name__ == "__main__":
-    ftpip = '192.168.200.228'
-    ftpcwd = '/export/yangwang'
-    ftpusr = 'yangwang'
-    ftppass = 'hello,wy'
-    remoteip = '192.168.10.101'
+    f = open('cfg.json')
+    js = json.load(f)
+    ftpcfg = js['ftp']
+
+    ftpip = ftpcfg['ip']
+    ftpcwd = ftpcfg['workpath']
+    ftpusr = ftpcfg['usr']
+    ftppass = ftpcfg['pw']
+
+    gnd = js['gnd']
+    remoteip = ['ip']
     upload_filename = debug_filename
 
-    boardusr = 'root'
-    boardpass = 'artosyn'
+    boardusr = gnd['usr']
+    boardpass = gnd['pw']
 
     fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
                         debug_filename, debug_filename)

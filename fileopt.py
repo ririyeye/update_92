@@ -5,9 +5,10 @@ import os
 import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
-
+import json
 
 # filename = "artosyn-upgrade-sirius-0.0.0.1.img"
+download_size = 0
 
 
 def ftpdownload(remoteip, cwd, usr, password, filename, localname):
@@ -16,14 +17,20 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
     ftp.connect(remoteip, 21)
     ftp.login(usr, password)
     ftp.cwd(cwd)
-
+    ftpsize = ftp.size(filename)
     with open(localname, 'wb') as f:
-        ftp.retrbinary('RETR ' + filename, f.write)
+        def callback(data):
+            global download_size
+            f.write(data)
+            download_size = download_size + len(data)
+            txt = format(download_size / ftpsize * 100, '.2f') + '%'
+            print('\r---'+txt,end="")
+        ftp.retrbinary('RETR ' + filename, callback)
 
     print("download ok!")
 
 
-def scp_updatefile(remoteip, filename , remote_file , usr, password):
+def scp_updatefile(remoteip, filename, remote_file, usr, password):
     print("upload updatefile to " + remoteip)
     ssh = SSHClient()
     ssh.load_system_host_keys()
@@ -40,11 +47,20 @@ def scp_updatefile(remoteip, filename , remote_file , usr, password):
 
 if __name__ == "__main__":
     filename = "artosyn-upgrade-sirius-0.0.0.1.img"
-    ftpdownload('192.168.200.228', '/export/yangwang',
-                'yangwang', 'hello,wy', filename, filename)
+    f = open('cfg.json')
+    js = json.load(f)
+    ftpcfg = js['ftp']
 
-    boardusr = 'root'
-    boardpass = 'artosyn'
+    ftpip = ftpcfg['ip']
+    ftpcwd = ftpcfg['workpath']
+    ftpusr = ftpcfg['usr']
+    ftppass = ftpcfg['pw']
+
+    ftpdownload(ftpip, ftpcwd,
+                ftpusr, ftppass, filename, filename)
+
+    boardusr = js['gnd']['usr']
+    boardpass = js['gnd']['pw']
     # scp_updatefile('192.168.1.100', filename, '/tmp/' +
     #                filename, boardusr, boardpass)
     # scp_updatefile('192.168.10.101', filename, '/tmp/' +

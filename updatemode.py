@@ -9,7 +9,7 @@ from scp import SCPClient
 
 from time import sleep
 from tcping import Ping
-
+import json
 
 def change_to_update_mode(remoteip, usr, password, testmode='off'):
     print(remoteip + " try update")
@@ -55,12 +55,14 @@ def wait_ping(remoteip):
 
 
 if __name__ == "__main__":
-    boardusr = 'root'
-    boardpass = 'artosyn'
-    # change_to_update_mode("192.168.1.100",boardusr,boardpass,'on')
-    change_to_update_mode("192.168.10.101", boardusr, boardpass, 'off')
+    f = open('cfg.json')
+    js = json.load(f)
+    board = js['gnd'];
+    boardusr = board['usr']
+    boardpass = board['pw']
+    ip = board['ip']
 
-    # loss=wait_ping("192.168.1.105")
-    # print("loss=" + loss)
+    change_to_update_mode(ip, boardusr, boardpass, 'off')
+
 
     os.system("pause")
