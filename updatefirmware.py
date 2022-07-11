@@ -11,6 +11,7 @@ from scp import SCPClient
 from time import sleep
 import json
 
+
 def updatecmd(remoteip, file, usr, password):
     print(remoteip + " try update")
     ssh = SSHClient()
@@ -21,8 +22,12 @@ def updatecmd(remoteip, file, usr, password):
     stdin, stdout, stderr = ssh.exec_command(
         "artosyn_upgrade /tmp/" + file, get_pty=True)
 
-    for line in iter(stdout.readline, ""):
-        print(line, end="")
+    while not stdout.channel.exit_status_ready():
+        if stdout.channel.recv_ready():
+            line = stdout.channel.recv(1024)
+            print(line, end="")
+        else:
+            sleep(0.1)
 
     ssh.close()
 
@@ -34,7 +39,7 @@ def rebootcmd(remoteip, usr, password):
     ssh = SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(remoteip, 22, usr, password ,timeout=10)
+    ssh.connect(remoteip, 22, usr, password, timeout=10)
 
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
@@ -48,11 +53,9 @@ def rebootcmd(remoteip, usr, password):
         "echo \"out\" > /sys/class/gpio/gpio15/direction \n "
         "echo 0 > /sys/class/gpio/gpio15/value \n"
         "ps \n "
-        "killall ar_wdt_service \n "
-        , get_pty=True)
+        "killall ar_wdt_service \n ", get_pty=True)
 
-    for line in iter(stdout.readline, ""):
-        print(line, end="")
+    sleep(5)
 
     ssh.close()
 
@@ -62,7 +65,7 @@ def rebootcmd(remoteip, usr, password):
 if __name__ == "__main__":
     f = open('cfg.json')
     js = json.load(f)
-    board = js['gnd'];
+    board = js['gnd']
     boardusr = board['usr']
     boardpass = board['pw']
     ip = board['ip']

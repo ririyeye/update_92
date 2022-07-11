@@ -2,8 +2,11 @@
 
 import os
 import updateonce
+import json
 
 if __name__ == "__main__":
-    updateonce.update('192.168.10.101')
+    f = open('cfg.json')
+    js = json.load(f)
+    updateonce.update(js['gnd']['ip'])
 
     os.system("pause")

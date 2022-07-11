@@ -7,6 +7,7 @@ import fileopt
 import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
+from time import sleep
 import json
 
 # debug_filename = "test_bb_cfg"
@@ -28,11 +29,14 @@ def execcmd(remoteip, usr, password):
         "#!/bin/sh \n "
         "chmod a+x /tmp/" + debug_filename + " \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-        + cmds
-        , get_pty=True)
+        + cmds, get_pty=True)
 
-    for line in iter(stdout.readline, ""):
-        print(line, end="")
+    while not stdout.channel.exit_status_ready():
+        if stdout.channel.recv_ready():
+            line = stdout.channel.recv(1024)
+            print(line, end="")
+        else:
+            sleep(0.1)
 
     ssh.close()
 
