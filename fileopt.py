@@ -7,8 +7,18 @@ from paramiko import SSHClient
 from scp import SCPClient
 import json
 
-# filename = "artosyn-upgrade-sirius-0.0.0.1.img"
-download_size = 0
+
+class cb_info(object):
+    def __init__(self, in_f, in_size):
+        self.ftpsize = in_size
+        self.f = in_f
+        self.download_size = 0
+
+    def callback(self, data):
+        self.f.write(data)
+        self.download_size = self.download_size + len(data)
+        txt = format(self.download_size / self.ftpsize * 100, '.2f') + '%'
+        print('\r---'+txt, end="")
 
 
 def ftpdownload(remoteip, cwd, usr, password, filename, localname):
@@ -18,14 +28,11 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
     ftp.login(usr, password)
     ftp.cwd(cwd)
     ftpsize = ftp.size(filename)
-    with open(localname, 'wb') as f:
-        def callback(data):
-            global download_size
-            f.write(data)
-            download_size = download_size + len(data)
-            txt = format(download_size / ftpsize * 100, '.2f') + '%'
-            print('\r---'+txt,end="")
-        ftp.retrbinary('RETR ' + filename, callback)
+    if not os.path.exists('tmp'):
+        os.mkdir("tmp")
+    with open('tmp/' + localname, 'wb') as f:
+        cbi = cb_info(f, ftpsize)
+        ftp.retrbinary('RETR ' + filename, cbi.callback, blocksize=128*1024)
 
     print("download ok!")
 
@@ -39,14 +46,14 @@ def scp_updatefile(remoteip, filename, remote_file, usr, password):
 
     # SCPCLient takes a paramiko transport as an argument
     scp = SCPClient(ssh.get_transport())
-    scp.put(filename, remote_file)
+    scp.put('tmp/' + filename, remote_file)
     scp.close()
     ssh.close()
     print(remoteip + " upload ok")
 
 
 if __name__ == "__main__":
-    filename = "artosyn-upgrade-sirius-0.0.0.1.img"
+    filename = "a7_rtos.nonsec.img"
     f = open('cfg.json')
     js = json.load(f)
     ftpcfg = js['ftp']

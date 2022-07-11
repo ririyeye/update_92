@@ -5,3 +5,4 @@ test_bb_cfg
 *.img
 sky.txt
 gnd.txt
+tmp
