@@ -6,7 +6,7 @@ import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
 import json
-
+import fileopt
 
 class cb_info(object):
     def __init__(self, in_f, in_size):
@@ -53,10 +53,16 @@ def scp_updatefile(remoteip, filename, remote_file, usr, password):
     print(remoteip + " upload ok")
 
 
+def get_json_cfg(filename):
+    p0 = os.path.realpath(__file__)
+    cfgfilename = os.path.join(os.path.dirname(p0), filename)
+    with open(cfgfilename) as f:
+        return json.load(f)
+
+
 if __name__ == "__main__":
     filename = "a7_rtos.nonsec.img"
-    f = open('cfg.json')
-    js = json.load(f)
+    js = get_json_cfg('cfg.json')
     ftpcfg = js['ftp']
 
     ftpip = ftpcfg['ip']

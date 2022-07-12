@@ -36,8 +36,7 @@ def execcmd(remoteip, usr, password):
 
 
 def update_rtos(nodename):
-    f = open('cfg.json')
-    js = json.load(f)
+    js = fileopt.get_json_cfg('cfg.json')
     ftpcfg = js['ftp']
 
     ftpip = ftpcfg['ip']

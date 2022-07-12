@@ -10,7 +10,7 @@ from scp import SCPClient
 
 from time import sleep
 import json
-
+import fileopt
 
 def updatecmd(remoteip, file, usr, password):
     print(remoteip + " try update")
@@ -63,8 +63,7 @@ def rebootcmd(remoteip, usr, password):
 
 
 if __name__ == "__main__":
-    f = open('cfg.json')
-    js = json.load(f)
+    js = fileopt.get_json_cfg('cfg.json')
     board = js['gnd']
     boardusr = board['usr']
     boardpass = board['pw']

@@ -10,7 +10,7 @@ from scp import SCPClient
 from time import sleep
 from tcping import Ping
 import json
-
+import fileopt
 
 def change_to_update_mode(remoteip, usr, password, testmode='off'):
     print(remoteip + " try update")
@@ -56,8 +56,7 @@ def wait_ping(remoteip):
 
 
 if __name__ == "__main__":
-    f = open('cfg.json')
-    js = json.load(f)
+    js = fileopt.get_json_cfg('cfg.json')
     board = js['gnd']
     boardusr = board['usr']
     boardpass = board['pw']
