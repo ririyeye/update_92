@@ -1,4 +1,4 @@
-
+#!/usr/bin/python3
 
 # from curses import savetty
 import fileopt
