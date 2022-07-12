@@ -22,7 +22,7 @@ def update(nodename):
 
     update_filename = "artosyn-upgrade-sirius-0.0.0.1.img"
 
-    nod = js[nod]
+    nod = js[nodename]
     remoteip = nod['ip']
 
     upload_filename = update_filename+remoteip

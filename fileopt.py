@@ -23,16 +23,17 @@ class cb_info(object):
 
 def ftpdownload(remoteip, cwd, usr, password, filename, localname):
     print("download " + filename)
-    ftp = ftplib.FTP()
-    ftp.connect(remoteip, 21)
-    ftp.login(usr, password)
-    ftp.cwd(cwd)
-    ftpsize = ftp.size(filename)
-    if not os.path.exists('tmp'):
-        os.mkdir("tmp")
-    with open('tmp/' + localname, 'wb') as f:
-        cbi = cb_info(f, ftpsize)
-        ftp.retrbinary('RETR ' + filename, cbi.callback, blocksize=128*1024)
+    with ftplib.FTP() as ftp:
+        ftp.connect(remoteip, 21)
+        ftp.login(usr, password)
+        ftp.cwd(cwd)
+        ftpsize = ftp.size(filename)
+        if not os.path.exists('tmp'):
+            os.mkdir("tmp")
+        with open('tmp/' + localname, 'wb') as f:
+            cbi = cb_info(f, ftpsize)
+            ftp.retrbinary('RETR ' + filename,
+                           cbi.callback, blocksize=128*1024)
 
     print("download ok!")
 
