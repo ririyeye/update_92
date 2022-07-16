@@ -8,6 +8,7 @@ from scp import SCPClient
 import json
 import fileopt
 
+
 class cb_info(object):
     def __init__(self, in_f, in_size):
         self.ftpsize = in_size
@@ -40,16 +41,15 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
 
 def scp_updatefile(remoteip, filename, remote_file, usr, password):
     print("upload updatefile to " + remoteip)
-    ssh = SSHClient()
-    ssh.load_system_host_keys()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(remoteip, 22, usr, password)
+    with SSHClient() as ssh:
+        ssh.load_system_host_keys()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(remoteip, 22, usr, password)
 
-    # SCPCLient takes a paramiko transport as an argument
-    scp = SCPClient(ssh.get_transport())
-    scp.put('tmp/' + filename, remote_file)
-    scp.close()
-    ssh.close()
+        # SCPCLient takes a paramiko transport as an argument
+        with SCPClient(ssh.get_transport()) as scp:
+            scp.put('tmp/' + filename, remote_file)
+
     print(remoteip + " upload ok")
 
 
