@@ -22,7 +22,7 @@ def updatecmd(remoteip, file, usr, password):
     stdin, stdout, stderr = ssh.exec_command(
         "artosyn_upgrade /tmp/" + file, get_pty=True)
 
-    while not stdout.channel.exit_status_ready():
+    while not stdout.channel.closed:
         if stdout.channel.recv_ready():
             line = stdout.readline(1024)
             print(line, end="")
@@ -33,14 +33,7 @@ def updatecmd(remoteip, file, usr, password):
 
     print(remoteip + " update ok")
 
-
-def rebootcmd(remoteip, usr, password):
-    print(remoteip + " try reboot")
-    ssh = SSHClient()
-    ssh.load_system_host_keys()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(remoteip, 22, usr, password, timeout=10)
-
+def rebootcmd_ssh(ssh):
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
@@ -54,6 +47,16 @@ def rebootcmd(remoteip, usr, password):
         "echo 0 > /sys/class/gpio/gpio15/value \n"
         "ps \n "
         "killall ar_wdt_service \n ", get_pty=True)
+
+
+def rebootcmd(remoteip, usr, password):
+    print(remoteip + " try reboot")
+    ssh = SSHClient()
+    ssh.load_system_host_keys()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(remoteip, 22, usr, password, timeout=10)
+
+    rebootcmd_ssh(ssh)
 
     sleep(5)
 

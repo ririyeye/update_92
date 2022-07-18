@@ -25,7 +25,7 @@ def execcmd(remoteip, usr, password):
         "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
         "/etc/artosyn-upgrade.sh /tmp/a7_rtos.nonsec.img \n ", get_pty=True)
 
-    while not stdout.channel.exit_status_ready():
+    while not stdout.channel.closed:
         if stdout.channel.recv_ready():
             line = stdout.readline(1024)
             print(line, end="")

@@ -31,7 +31,7 @@ def execcmd(remoteip, usr, password):
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
         + cmds, get_pty=True)
 
-    while not stdout.channel.exit_status_ready():
+    while not stdout.channel.closed:
         if stdout.channel.recv_ready():
             line = stdout.readline(1024)
             print(line, end="")
