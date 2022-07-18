@@ -11,8 +11,7 @@ from time import sleep
 from tcping import Ping
 import json
 import fileopt
-
-
+import updatefirmware
 def change_to_update_mode(remoteip, usr, password, testmode='off'):
     print(remoteip + " try update")
     with SSHClient() as ssh:
@@ -34,12 +33,7 @@ def change_to_update_mode(remoteip, usr, password, testmode='off'):
                 ssh.exec_command("rm /local/sirius-clean-system-flag")
             else:
                 print("reboot " + remoteip)
-                ssh.exec_command(
-                    "#!/bin/sh \n "
-                    "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-                    "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
-                    "/local/usr/bin/reboot.sh"
-                )
+                updatefirmware.rebootcmd_ssh(ssh)
                 sleep(5)
         else:
             print(remoteip + "enter update mode")
