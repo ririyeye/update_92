@@ -37,6 +37,7 @@ def rebootcmd_ssh(ssh):
         "#!/bin/sh \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
         "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
+        "mount /dev/mtdblock14 /local"
         "cp /local/usr/bin/ar_wdt_service /tmp \n "
         "/tmp/ar_wdt_service -t 1 & \n "
         # "sleep 1  \n "
@@ -46,6 +47,7 @@ def rebootcmd_ssh(ssh):
         "echo 0 > /sys/class/gpio/gpio15/value \n"
         "ps \n "
         "killall ar_wdt_service \n ", get_pty=True)
+    sleep(5)
 
 
 def rebootcmd(remoteip, usr, password):
@@ -57,7 +59,6 @@ def rebootcmd(remoteip, usr, password):
 
         rebootcmd_ssh(ssh)
 
-        sleep(5)
 
     print(remoteip + " reboot ok")
 

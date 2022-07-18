@@ -34,7 +34,6 @@ def change_to_update_mode(remoteip, usr, password, testmode='off'):
             else:
                 print("reboot " + remoteip)
                 updatefirmware.rebootcmd_ssh(ssh)
-                sleep(5)
         else:
             print(remoteip + "enter update mode")
 
