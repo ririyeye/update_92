@@ -6,6 +6,13 @@
 		"workpath": "/export/yangwang"
 	},
 	"filedbg": "1.bin",
+	"transferdbg": {		
+		"file": "test_bb_transport",
+		"cmd" : {
+			"gnd" : "-R /tmp/1.bin -p 13",
+			"sky" : "-S /tmp/1.bin -p 13"
+		}
+	},
 	"sky": {
 		"ip": "192.168.1.100",
 		"usr": "root",
