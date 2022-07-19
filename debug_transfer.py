@@ -11,32 +11,34 @@ import json
 from time import sleep
 
 
-def execcmd(remoteip, usr, password ,cmdfile , cmd):
+def execline(ssh , cmd):
+    stdin, stdout, stderr = ssh.exec_command(
+        "#!/bin/sh \n "
+        "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
+        + cmd + " \n", get_pty=True)
+
+    print("exec " + cmd)
+    readflg = 0
+    while not stdout.channel.closed:
+        if stdout.channel.recv_ready():
+            line = stdout.readline(1024)
+            print(line, end="")
+            readflg = 1
+        else:
+            sleep(0.1)
+
+    if not readflg:
+        print(stdout.readline())
+
+def execcmd(remoteip, usr, password ,cmdfile , cmds):
     with SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
-        readflg = 0
+        for line in cmds:
+            execline(ssh , line)
 
-        stdin, stdout, stderr = ssh.exec_command(
-            "#!/bin/sh \n "
-            "chmod a+x /tmp/" + cmdfile + " \n "
-            "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-            + cmd, get_pty=True)
-
-        print("exec " + cmd)
-
-        while not stdout.channel.closed:
-            if stdout.channel.recv_ready():
-                line = stdout.readline(1024)
-                print(line, end="")
-                readflg = 1
-            else:
-                sleep(0.1)
-
-        if not readflg:
-            print(stdout.readline())
 
 
 def transfer_file(nodename):
@@ -63,8 +65,8 @@ def transfer_file(nodename):
     fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
                            upload_filename, boardusr, boardpass)
 
-    cmd = '/tmp/' + upload_filename + ' ' + js['transferdbg']['cmd'][nodename]
+    cmds = js['transferdbg'][nodename]
 
-    execcmd(remoteip, boardusr, boardpass, upload_filename, cmd)
+    execcmd(remoteip, boardusr, boardpass, upload_filename, cmds)
 
     # updatefirmware.rebootcmd(remoteip, boardusr, boardpass)

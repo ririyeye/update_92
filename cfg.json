@@ -6,12 +6,19 @@
 		"workpath": "/export/yangwang"
 	},
 	"filedbg": "1.bin",
-	"transferdbg": {		
+	"transferdbg": {
 		"file": "test_bb_transport",
-		"cmd" : {
-			"gnd" : "-R /tmp/1.bin -p 13",
-			"sky" : "-S /tmp/1.bin -p 13"
-		}
+		"sky": [
+			"chmod a+x /tmp/test_bb_transport",
+			"/tmp/test_bb_transport -S /tmp/1.bin -p 13",
+			"md5sum /tmp/1.bin"
+		],
+		"gnd": [
+			"chmod a+x /tmp/test_bb_transport",
+			"rm /tmp/1.bin",
+			"/tmp/test_bb_transport -R /tmp/1.bin -p 13",
+			"md5sum /tmp/1.bin"
+		]
 	},
 	"sky": {
 		"ip": "192.168.1.100",
