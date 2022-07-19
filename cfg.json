@@ -5,6 +5,7 @@
 		"pw": "hello,wy",
 		"workpath": "/export/yangwang"
 	},
+	"filedbg": "1.bin",
 	"sky": {
 		"ip": "192.168.1.100",
 		"usr": "root",
