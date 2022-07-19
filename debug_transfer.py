@@ -15,6 +15,7 @@ def execline(ssh , cmd):
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
+        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
         + cmd + " \n", get_pty=True)
 
     print("exec " + cmd)
@@ -27,8 +28,7 @@ def execline(ssh , cmd):
         else:
             sleep(0.1)
 
-    if not readflg:
-        print(stdout.readline())
+    print(stdout.readline())
 
 def execcmd(remoteip, usr, password ,cmdfile , cmds):
     with SSHClient() as ssh:
