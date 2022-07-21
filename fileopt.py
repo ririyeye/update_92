@@ -45,9 +45,14 @@ def scp_updatefile(remoteip, filename, remote_file, usr, password):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
+        def cb (filename, size, sent):
+            percent = format(sent / size * 100, '.2f') + '%'
+            print("\rcopy " , filename , percent , end="")
+
         # SCPCLient takes a paramiko transport as an argument
-        with SCPClient(ssh.get_transport()) as scp:
+        with SCPClient(ssh.get_transport(),progress=cb) as scp:
             scp.put('tmp/' + filename, remote_file)
+        print("\n")
 
     print(remoteip + " upload ok")
 
@@ -72,10 +77,11 @@ if __name__ == "__main__":
     ftpdownload(ftpip, ftpcwd,
                 ftpusr, ftppass, filename, filename)
 
-    boardusr = js['gnd']['usr']
-    boardpass = js['gnd']['pw']
-    # scp_updatefile('192.168.1.100', filename, '/tmp/' +
-    #                filename, boardusr, boardpass)
-    # scp_updatefile('192.168.10.101', filename, '/tmp/' +
-    #                filename, boardusr, boardpass)
+    board = js['gnd']
+
+    boardusr = board['usr']
+    boardpass = board['pw']
+    boardip = board['ip']
+
+    scp_updatefile(boardip, filename, '/tmp/' + filename, boardusr, boardpass)
     os.system("pause")
