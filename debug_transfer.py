@@ -5,7 +5,6 @@ import fileopt
 
 import updatefirmware
 import paramiko
-from paramiko import SSHClient
 from scp import SCPClient
 import json
 from time import sleep
@@ -31,7 +30,7 @@ def execline(ssh , cmd):
     print(stdout.readline())
 
 def execcmd(remoteip, usr, password ,cmdfile , cmds):
-    with SSHClient() as ssh:
+    with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)

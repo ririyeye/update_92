@@ -5,7 +5,6 @@ import fileopt
 
 import updatefirmware
 import paramiko
-from paramiko import SSHClient
 from scp import SCPClient
 import json
 from time import sleep
@@ -14,7 +13,7 @@ debug_filename = "a7_rtos.nonsec.img"
 
 
 def execcmd(remoteip, usr, password):
-    with SSHClient() as ssh:
+    with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)

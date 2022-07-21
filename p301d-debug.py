@@ -4,7 +4,6 @@ import os
 import fileopt
 
 import paramiko
-from paramiko import SSHClient
 from scp import SCPClient
 from time import sleep
 import json
@@ -14,7 +13,7 @@ debug_filename = "p301d"
 
 
 def execcmd(remoteip, usr, password):
-    with SSHClient() as ssh:
+    with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)

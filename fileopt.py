@@ -3,7 +3,6 @@ import ftplib
 import os
 
 import paramiko
-from paramiko import SSHClient
 from scp import SCPClient
 import json
 import fileopt
@@ -41,7 +40,7 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
 
 def scp_updatefile(remoteip, filename, remote_file, usr, password):
     print("upload updatefile to " + remoteip)
-    with SSHClient() as ssh:
+    with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
