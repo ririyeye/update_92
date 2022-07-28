@@ -18,8 +18,9 @@ def change_to_update_mode(remoteip, usr, password, testmode='off'):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
+        # 检查wdt,升级模式下没有该程序
         stdin, stdout, stderr = ssh.exec_command(
-            "ps | grep 301d | grep -v grep | wc -l")
+            "ps | grep ar_wdt | grep -v grep | wc -l")
         ps = stdout.readlines()
         retcode = int(ps[0].strip('\n'))
 

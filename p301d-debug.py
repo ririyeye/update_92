@@ -46,8 +46,8 @@ if __name__ == "__main__":
     ftpusr = ftpcfg['usr']
     ftppass = ftpcfg['pw']
 
-    gnd = js['gnd']
-    remoteip = ['ip']
+    gnd = js['sky']
+    remoteip = gnd['ip']
     upload_filename = debug_filename
 
     boardusr = gnd['usr']
@@ -60,6 +60,6 @@ if __name__ == "__main__":
     fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
                            upload_filename, boardusr, boardpass)
 
-    execcmd(remoteip, boardusr, boardpass)
+    #execcmd(remoteip, boardusr, boardpass)
 
     os.system("pause")
