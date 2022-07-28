@@ -10,24 +10,6 @@ import json
 from time import sleep
 
 
-def execline(ssh , cmd):
-    stdin, stdout, stderr = ssh.exec_command(
-        "#!/bin/sh \n "
-        "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
-        + cmd + " \n", get_pty=True)
-
-    print("exec " + cmd)
-    readflg = 0
-    while not stdout.channel.closed:
-        if stdout.channel.recv_ready():
-            line = stdout.readline(1024)
-            print(line, end="")
-            readflg = 1
-        else:
-            sleep(0.1)
-
-    print(stdout.readline())
 
 def execcmd(remoteip, usr, password ,cmdfile , cmds):
     with paramiko.SSHClient() as ssh:
@@ -36,7 +18,7 @@ def execcmd(remoteip, usr, password ,cmdfile , cmds):
         ssh.connect(remoteip, 22, usr, password)
 
         for line in cmds:
-            execline(ssh , line)
+            fileopt.execline(ssh , line)
 
 
 

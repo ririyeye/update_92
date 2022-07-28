@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from operator import mod
 import os
 import fileopt
 
@@ -8,33 +9,14 @@ from scp import SCPClient
 from time import sleep
 import json
 
-# debug_filename = "test_bb_cfg"
-debug_filename = "p301d"
 
-
-def execcmd(remoteip, usr, password):
+def execcmd(remoteip, usr, password, cmd):
     with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
+        fileopt.execline(ssh,cmd)
 
-        if debug_filename == "p301d":
-            cmds = "/tmp/p301d --board_type 0 --stream_type 1 --pipeline 0 --auto_start | grep debug\n"
-        else:
-            cmds = "/tmp/" + debug_filename + " \n "
-
-        stdin, stdout, stderr = ssh.exec_command(
-            "#!/bin/sh \n "
-            "chmod a+x /tmp/" + debug_filename + " \n "
-            "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-            + cmds, get_pty=True)
-
-        while not stdout.channel.closed:
-            if stdout.channel.recv_ready():
-                line = stdout.readline(1024)
-                print(line, end="")
-            else:
-                sleep(0.1)
 
 
 if __name__ == "__main__":
@@ -46,8 +28,13 @@ if __name__ == "__main__":
     ftpusr = ftpcfg['usr']
     ftppass = ftpcfg['pw']
 
-    gnd = js['sky']
+    boardtyp = 'sky'
+
+    gnd = js[boardtyp]
     remoteip = gnd['ip']
+    debugnode = js['p301d']
+
+    debug_filename = debugnode["file"]
     upload_filename = debug_filename
 
     boardusr = gnd['usr']
@@ -60,6 +47,7 @@ if __name__ == "__main__":
     fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
                            upload_filename, boardusr, boardpass)
 
-    #execcmd(remoteip, boardusr, boardpass)
+    for line in debugnode['com']:
+        execcmd(remoteip, boardusr, boardpass, line)
 
     os.system("pause")

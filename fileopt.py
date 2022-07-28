@@ -6,7 +6,7 @@ import paramiko
 from scp import SCPClient
 import json
 import fileopt
-
+from time import sleep
 
 class cb_info(object):
     def __init__(self, in_f, in_size):
@@ -56,6 +56,22 @@ def scp_updatefile(remoteip, filename, remote_file, usr, password):
 
     print(remoteip + " upload ok")
 
+def execline(ssh , cmd):
+    stdin, stdout, stderr = ssh.exec_command(
+        "#!/bin/sh \n "
+        "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
+        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
+        + cmd + " \n", get_pty=True)
+
+    print("exec " + cmd)
+    while not stdout.channel.closed:
+        if stdout.channel.recv_ready():
+            line = stdout.readline(1024)
+            print(line, end="")
+        else:
+            sleep(0.1)
+
+    print(stdout.readline())
 
 def get_json_cfg(filename):
     p0 = os.path.realpath(__file__)

@@ -20,6 +20,18 @@
 			"md5sum /tmp/1.bin"
 		]
 	},
+	"p301d": {
+		"file": "p301d",
+		"com": [
+			"chmod a+x /tmp/p301d"
+		],
+		"gnd": [
+			"/tmp/p301d --board_type 0 --stream_type 1 --pipeline 0 --auto_start --transport 10:11:12"
+		],
+		"sky": [
+			"/tmp/p301d --board_type 1 --stream_type 1 --pipeline 0 --auto_start --transport 10:11:12"
+		]
+	},
 	"sky": {
 		"ip": "192.168.10.104",
 		"usr": "root",
