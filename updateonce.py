@@ -24,17 +24,16 @@ def update(nodename):
     nod = js[nodename]
     remoteip = nod['ip']
 
-    upload_filename = update_filename+remoteip
+    upload_filename = update_filename + remoteip
 
     boardusr = nod['usr']
     boardpass = nod['pw']
 
-#check update mode
+    #check update mode
     updatemode.change_to_update_mode(remoteip, boardusr, boardpass)
-#download update file
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
-                        update_filename, upload_filename)
-#check board
+    #download update file
+    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, update_filename, upload_filename)
+    #check board
     retry = 5
     while retry > 0:
         succ = updatemode.wait_ping(remoteip)
@@ -42,14 +41,14 @@ def update(nodename):
             break
         else:
             print('retry ping' + remoteip)
-#upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename,
-                           '/tmp/' + upload_filename, boardusr, boardpass)
-#update command
-    updatefirmware.updatecmd(remoteip, upload_filename, boardusr, boardpass)
-#reboot after update
-    updatefirmware.rebootcmd(remoteip, boardusr, boardpass)
 
+
+#upload update file
+    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' + upload_filename, boardusr, boardpass)
+    #update command
+    updatefirmware.updatecmd(remoteip, upload_filename, boardusr, boardpass)
+    #reboot after update
+    updatefirmware.rebootcmd(remoteip, boardusr, boardpass)
 
 if __name__ == "__main__":
     update('gnd')

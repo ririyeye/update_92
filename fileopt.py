@@ -8,7 +8,9 @@ import json
 import fileopt
 from time import sleep
 
+
 class cb_info(object):
+
     def __init__(self, in_f, in_size):
         self.ftpsize = in_size
         self.f = in_f
@@ -18,7 +20,7 @@ class cb_info(object):
         self.f.write(data)
         self.download_size = self.download_size + len(data)
         txt = format(self.download_size / self.ftpsize * 100, '.2f') + '%'
-        print('\r---'+txt, end="")
+        print('\r---' + txt, end="")
 
 
 def ftpdownload(remoteip, cwd, usr, password, filename, localname):
@@ -32,8 +34,7 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
             os.mkdir("tmp")
         with open('tmp/' + localname, 'wb') as f:
             cbi = cb_info(f, ftpsize)
-            ftp.retrbinary('RETR ' + filename,
-                           cbi.callback, blocksize=128*1024)
+            ftp.retrbinary('RETR ' + filename, cbi.callback, blocksize=128 * 1024)
 
     print("download ok!")
 
@@ -45,23 +46,24 @@ def scp_updatefile(remoteip, filename, remote_file, usr, password):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
-        def cb (filename, size, sent):
+        def cb(filename, size, sent):
             percent = format(sent / size * 100, '.2f') + '%'
-            print("\rcopy " , filename , percent , end="")
+            print("\rcopy ", filename, percent, end="")
 
         # SCPCLient takes a paramiko transport as an argument
-        with SCPClient(ssh.get_transport(),progress=cb) as scp:
+        with SCPClient(ssh.get_transport(), progress=cb) as scp:
             scp.put('tmp/' + filename, remote_file)
         print("\n")
 
     print(remoteip + " upload ok")
 
-def execline(ssh , cmd):
+
+def execline(ssh, cmd):
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
-        + cmd + " \n", get_pty=True)
+        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n" + cmd + " \n",
+        get_pty=True)
 
     print("exec " + cmd)
     while not stdout.channel.closed:
@@ -72,6 +74,7 @@ def execline(ssh , cmd):
             sleep(0.1)
 
     print(stdout.readline())
+
 
 def get_json_cfg(filename):
     p0 = os.path.realpath(__file__)
@@ -90,8 +93,7 @@ if __name__ == "__main__":
     ftpusr = ftpcfg['usr']
     ftppass = ftpcfg['pw']
 
-    ftpdownload(ftpip, ftpcwd,
-                ftpusr, ftppass, filename, filename)
+    ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, filename, filename)
 
     board = js['gnd']
 

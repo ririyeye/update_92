@@ -22,7 +22,8 @@ def execcmd(remoteip, usr, password):
             "#!/bin/sh \n "
             "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
             "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
-            "/etc/artosyn-upgrade.sh /tmp/a7_rtos.nonsec.img \n ", get_pty=True)
+            "/etc/artosyn-upgrade.sh /tmp/a7_rtos.nonsec.img \n ",
+            get_pty=True)
 
         while not stdout.channel.closed:
             if stdout.channel.recv_ready():
@@ -49,12 +50,10 @@ def update_rtos(nodename):
     boardusr = nod['usr']
     boardpass = nod['pw']
 
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
-                        debug_filename, debug_filename)
+    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, debug_filename, debug_filename)
 
     #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
-                           upload_filename, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' + upload_filename, boardusr, boardpass)
 
     execcmd(remoteip, boardusr, boardpass)
 

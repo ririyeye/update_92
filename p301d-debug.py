@@ -10,13 +10,13 @@ from time import sleep
 import json
 
 
-def execcmd(remoteip, usr, password, cmd):
+def execcmds(remoteip, usr, password, cmds):
     with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
-        fileopt.execline(ssh,cmd)
-
+        for line in cmds:
+            fileopt.execline(ssh, line)
 
 
 if __name__ == "__main__":
@@ -40,14 +40,11 @@ if __name__ == "__main__":
     boardusr = gnd['usr']
     boardpass = gnd['pw']
 
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
-                        debug_filename, debug_filename)
+    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, debug_filename, debug_filename)
 
     #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
-                           upload_filename, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' + upload_filename, boardusr, boardpass)
 
-    for line in debugnode['com']:
-        execcmd(remoteip, boardusr, boardpass, line)
+    execcmds(remoteip, boardusr, boardpass, debugnode['com'])
 
     os.system("pause")

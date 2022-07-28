@@ -19,8 +19,7 @@ def updatecmd(remoteip, file, usr, password):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
-        stdin, stdout, stderr = ssh.exec_command(
-            "artosyn_upgrade /tmp/" + file, get_pty=True)
+        stdin, stdout, stderr = ssh.exec_command("artosyn_upgrade /tmp/" + file, get_pty=True)
 
         while not stdout.channel.closed:
             if stdout.channel.recv_ready():
@@ -30,6 +29,7 @@ def updatecmd(remoteip, file, usr, password):
                 sleep(0.1)
 
     print(remoteip + " update ok")
+
 
 def rebootcmd_ssh(ssh):
     stdin, stdout, stderr = ssh.exec_command(
@@ -45,7 +45,8 @@ def rebootcmd_ssh(ssh):
         "echo \"out\" > /sys/class/gpio/gpio15/direction \n "
         "echo 0 > /sys/class/gpio/gpio15/value \n"
         "ps \n "
-        "killall ar_wdt_service \n ", get_pty=True)
+        "killall ar_wdt_service \n ",
+        get_pty=True)
     sleep(5)
 
 
@@ -57,7 +58,6 @@ def rebootcmd(remoteip, usr, password):
         ssh.connect(remoteip, 22, usr, password, timeout=10)
 
         rebootcmd_ssh(ssh)
-
 
     print(remoteip + " reboot ok")
 

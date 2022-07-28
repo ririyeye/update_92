@@ -10,16 +10,14 @@ import json
 from time import sleep
 
 
-
-def execcmd(remoteip, usr, password ,cmdfile , cmds):
+def execcmd(remoteip, usr, password, cmdfile, cmds):
     with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
         for line in cmds:
-            fileopt.execline(ssh , line)
-
+            fileopt.execline(ssh, line)
 
 
 def transfer_file(nodename):
@@ -39,12 +37,10 @@ def transfer_file(nodename):
     boardusr = nod['usr']
     boardpass = nod['pw']
 
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass,
-                        upload_filename, upload_filename)
+    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, upload_filename, upload_filename)
 
     #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' +
-                           upload_filename, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' + upload_filename, boardusr, boardpass)
 
     cmds = js['transferdbg'][nodename]
 

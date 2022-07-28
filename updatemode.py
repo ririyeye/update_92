@@ -11,6 +11,8 @@ from tcping import Ping
 import json
 import fileopt
 import updatefirmware
+
+
 def change_to_update_mode(remoteip, usr, password, testmode='off'):
     print(remoteip + " try update")
     with paramiko.SSHClient() as ssh:
@@ -19,8 +21,7 @@ def change_to_update_mode(remoteip, usr, password, testmode='off'):
         ssh.connect(remoteip, 22, usr, password)
 
         # 检查wdt,升级模式下没有该程序
-        stdin, stdout, stderr = ssh.exec_command(
-            "ps | grep ar_wdt | grep -v grep | wc -l")
+        stdin, stdout, stderr = ssh.exec_command("ps | grep ar_wdt | grep -v grep | wc -l")
         ps = stdout.readlines()
         retcode = int(ps[0].strip('\n'))
 
