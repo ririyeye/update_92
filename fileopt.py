@@ -30,6 +30,11 @@ def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
         ftp.login(usr, password)
         ftp.cwd(cwd)
         ftpsize = ftp.size(server_filename)
+
+        path = os.path.dirname(localname)
+        if not os.path.exists(path):
+            os.mkdir(path)
+
         with open(localname, 'wb') as f:
             cbi = cb_info(f, ftpsize)
             ftp.retrbinary('RETR ' + server_filename, cbi.callback, blocksize=128 * 1024)
