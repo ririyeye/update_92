@@ -20,6 +20,10 @@
 			"md5sum /tmp/a"
 		]
 	},
+	"pull_sdk": [
+		"sdk-artosyn-videowave-1.0.1.5.tar.gz",
+		"artosyn-upgrade-sirius-0.0.0.1.img"
+	],
 	"p301d": {
 		"file": "p301d",
 		"com": [
