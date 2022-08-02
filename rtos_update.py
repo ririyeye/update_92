@@ -33,7 +33,7 @@ def execcmd(remoteip, usr, password):
                 sleep(0.1)
 
 
-def update_rtos(nodename):
+def update_rtos(nodename ,  force_file=''):
     js = fileopt.get_json_cfg('cfg.json')
     ftpcfg = js['ftp']
 
@@ -45,20 +45,18 @@ def update_rtos(nodename):
     upload_filename = debug_filename
 
     local_file = 'tmp/' + upload_filename
-    remote_file = '/tmp/' + upload_filename
-
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, debug_filename, local_file)
-
-    update_rtos_with_file(nodename, local_file, remote_file)
-
-
-def update_rtos_with_file(nodename, local_file, remote_file):
-    js = fileopt.get_json_cfg('cfg.json')
 
     nod = js[nodename]
     remoteip = nod['ip']
     boardusr = nod['usr']
     boardpass = nod['pw']
+
+    if force_file == '':
+        remote_file = '/tmp/' + upload_filename
+        fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, debug_filename, local_file)
+    else:
+        remote_file = force_file
+
     #upload update file
     fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)
 

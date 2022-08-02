@@ -3,8 +3,12 @@
 import os
 import updateonce
 import json
+import sys
 
 if __name__ == "__main__":
-    updateonce.update('gnd')
+    if len(sys.argv) > 1:
+        updateonce.update('sky', sys.argv[1])
+    else:
+        updateonce.update('gnd')
 
     os.system("pause")

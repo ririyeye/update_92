@@ -10,7 +10,7 @@ from time import sleep
 import json
 
 
-def update(nodename):
+def update(nodename, force_file=''):
     js = fileopt.get_json_cfg('cfg.json')
     ftpcfg = js['ftp']
 
@@ -25,7 +25,7 @@ def update(nodename):
     remoteip = nod['ip']
 
     upload_filename = update_filename + remoteip
-    local_file = 'tmp/' + update_filename
+
     remote_file = '/tmp/' + update_filename
 
     boardusr = nod['usr']
@@ -34,7 +34,12 @@ def update(nodename):
     #check update mode
     updatemode.change_to_update_mode(remoteip, boardusr, boardpass)
     #download update file
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, update_filename, local_file)
+    if force_file == '':
+        local_file = 'tmp/' + update_filename
+        fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, update_filename, local_file)
+    else:
+        local_file = force_file
+
     #check board
     retry = 5
     while retry > 0:
@@ -44,16 +49,7 @@ def update(nodename):
         else:
             print('retry ping' + remoteip)
 
-    update_with_file(nodename, local_file, remote_file)
-
-
-def update_with_file(nodename, local_file, remote_file):
-    js = fileopt.get_json_cfg('cfg.json')
-    nod = js[nodename]
-    remoteip = nod['ip']
-
-    boardusr = nod['usr']
-    boardpass = nod['pw']
+    remote_file = '/tmp/' + update_filename
 
     #upload update file
     fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)

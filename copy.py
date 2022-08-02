@@ -5,6 +5,7 @@ import rtos_update
 import json
 import fileopt
 import shutil
+import sys
 if __name__ == "__main__":
     js = fileopt.get_json_cfg('cfg.json')
     nod = js['sky']
@@ -15,9 +16,13 @@ if __name__ == "__main__":
 
     upload_filename = js['filedbg']
 
-    local_file = upload_filename
     remote_file = '/tmp/' + upload_filename
 
+    if len(sys.argv) > 1:
+        local_file = sys.argv[1]
+    else:
+        local_file = upload_filename
+
     #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, remote_file, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)
     os.system("pause")

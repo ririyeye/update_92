@@ -3,8 +3,11 @@
 import os
 import rtos_update
 import json
-
+import sys
 if __name__ == "__main__":
-    rtos_update.update_rtos('gnd')
+    if len(sys.argv) > 1:
+        rtos_update.update_rtos('gnd', sys.argv[1])
+    else:
+        rtos_update.update_rtos('gnd')
 
     os.system("pause")
