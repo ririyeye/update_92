@@ -30,9 +30,7 @@ def ftpdownload(remoteip, cwd, usr, password, filename, localname):
         ftp.login(usr, password)
         ftp.cwd(cwd)
         ftpsize = ftp.size(filename)
-        if not os.path.exists('tmp'):
-            os.mkdir("tmp")
-        with open('tmp/' + localname, 'wb') as f:
+        with open(localname, 'wb') as f:
             cbi = cb_info(f, ftpsize)
             ftp.retrbinary('RETR ' + filename, cbi.callback, blocksize=128 * 1024)
 
@@ -52,7 +50,7 @@ def scp_updatefile(remoteip, filename, remote_file, usr, password):
 
         # SCPCLient takes a paramiko transport as an argument
         with SCPClient(ssh.get_transport(), progress=cb) as scp:
-            scp.put('tmp/' + filename, remote_file)
+            scp.put(filename, remote_file)
         print("\n")
 
     print(remoteip + " upload ok")
@@ -101,5 +99,5 @@ if __name__ == "__main__":
     boardpass = board['pw']
     boardip = board['ip']
 
-    scp_updatefile(boardip, filename, '/tmp/' + filename, boardusr, boardpass)
+    scp_updatefile(boardip, 'tmp/' + filename, '/tmp/' + filename, boardusr, boardpass)
     os.system("pause")

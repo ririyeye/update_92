@@ -15,8 +15,9 @@ if __name__ == "__main__":
 
     upload_filename = js['filedbg']
 
-    shutil.copyfile(upload_filename, 'tmp/' + upload_filename)
+    local_file = upload_filename
+    remote_file = '/tmp/' + upload_filename
 
     #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' + upload_filename, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, upload_filename, remote_file, boardusr, boardpass)
     os.system("pause")

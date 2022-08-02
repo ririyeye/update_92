@@ -19,7 +19,7 @@ def updatecmd(remoteip, file, usr, password):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
-        stdin, stdout, stderr = ssh.exec_command("artosyn_upgrade /tmp/" + file, get_pty=True)
+        stdin, stdout, stderr = ssh.exec_command("artosyn_upgrade " + file, get_pty=True)
 
         while not stdout.channel.closed:
             if stdout.channel.recv_ready():
