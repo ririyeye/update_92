@@ -3,6 +3,7 @@
 from operator import mod
 import os
 import fileopt
+import sys
 
 import paramiko
 from scp import SCPClient
@@ -34,16 +35,20 @@ if __name__ == "__main__":
     remoteip = gnd['ip']
     debugnode = js['p301d']
 
-    debug_filename = debugnode["file"]
-    upload_filename = debug_filename
+    upload_filename = debugnode["file"]
+    remote_filename = '/tmp/' + upload_filename
 
     boardusr = gnd['usr']
     boardpass = gnd['pw']
 
-    fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, debug_filename, debug_filename)
+    if len(sys.argv) > 1:
+        local_file = sys.argv[1]
+    else:
+        local_file = 'tmp/' + upload_filename
+        fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, upload_filename, local_file)
 
     #upload update file
-    fileopt.scp_updatefile(remoteip, upload_filename, '/tmp/' + upload_filename, boardusr, boardpass)
+    fileopt.scp_updatefile(remoteip, local_file, remote_filename, boardusr, boardpass)
 
     execcmds(remoteip, boardusr, boardpass, debugnode['com'])
 

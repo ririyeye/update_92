@@ -23,34 +23,34 @@ class cb_info(object):
         print('\r---' + txt, end="")
 
 
-def ftpdownload(remoteip, cwd, usr, password, filename, localname):
-    print("download " + filename)
+def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
+    print("download " + server_filename)
     with ftplib.FTP() as ftp:
         ftp.connect(remoteip, 21)
         ftp.login(usr, password)
         ftp.cwd(cwd)
-        ftpsize = ftp.size(filename)
+        ftpsize = ftp.size(server_filename)
         with open(localname, 'wb') as f:
             cbi = cb_info(f, ftpsize)
-            ftp.retrbinary('RETR ' + filename, cbi.callback, blocksize=128 * 1024)
+            ftp.retrbinary('RETR ' + server_filename, cbi.callback, blocksize=128 * 1024)
 
     print("download ok!")
 
 
-def scp_updatefile(remoteip, filename, remote_file, usr, password):
+def scp_updatefile(remoteip, local_file, remote_file, usr, password):
     print("upload updatefile to " + remoteip)
     with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
-        def cb(filename, size, sent):
+        def cb(local_file, size, sent):
             percent = format(sent / size * 100, '.2f') + '%'
-            print("\rcopy ", filename, percent, end="")
+            print("\rcopy ", local_file, percent, end="")
 
         # SCPCLient takes a paramiko transport as an argument
         with SCPClient(ssh.get_transport(), progress=cb) as scp:
-            scp.put(filename, remote_file)
+            scp.put(local_file, remote_file)
         print("\n")
 
     print(remoteip + " upload ok")
