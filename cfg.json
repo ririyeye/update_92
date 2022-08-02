@@ -5,19 +5,19 @@
 		"pw": "hello,wy",
 		"workpath": "/export/yangwang"
 	},
-	"filedbg": "1.bin",
+	"filedbg": "a",
 	"transferdbg": {
 		"file": "test_bb_transport",
 		"sky": [
 			"chmod a+x /tmp/test_bb_transport",
-			"/tmp/test_bb_transport -S /tmp/1.bin -p 13",
-			"md5sum /tmp/1.bin"
+			"/tmp/test_bb_transport -S /tmp/a -p 13",
+			"md5sum /tmp/a"
 		],
 		"gnd": [
 			"chmod a+x /tmp/test_bb_transport",
-			"rm /tmp/1.bin",
-			"/tmp/test_bb_transport -R /tmp/1.bin -p 13",
-			"md5sum /tmp/1.bin"
+			"rm /tmp/a",
+			"/tmp/test_bb_transport -R /tmp/a -p 13",
+			"md5sum /tmp/a"
 		]
 	},
 	"p301d": {
