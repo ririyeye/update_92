@@ -33,7 +33,7 @@ def execcmd(remoteip, usr, password):
                 sleep(0.1)
 
 
-def update_rtos(nodename ,  force_file=''):
+def update_rtos(nodename, force_file='', index=0):
     js = fileopt.get_json_cfg('cfg.json')
     ftpcfg = js['ftp']
 
@@ -48,6 +48,9 @@ def update_rtos(nodename ,  force_file=''):
 
     nod = js[nodename]
     remoteip = nod['ip']
+    if isinstance(remoteip, list):
+        remoteip = remoteip[index]
+
     boardusr = nod['usr']
     boardpass = nod['pw']
 

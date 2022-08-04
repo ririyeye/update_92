@@ -10,7 +10,7 @@ from time import sleep
 import json
 
 
-def update(nodename, force_file=''):
+def update(nodename, force_file='', index=0):
     js = fileopt.get_json_cfg('cfg.json')
     ftpcfg = js['ftp']
 
@@ -23,6 +23,9 @@ def update(nodename, force_file=''):
 
     nod = js[nodename]
     remoteip = nod['ip']
+
+    if isinstance(remoteip, list):
+        remoteip = remoteip[index]
 
     upload_filename = update_filename + remoteip
 
