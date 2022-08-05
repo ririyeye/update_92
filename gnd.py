@@ -6,9 +6,12 @@ import json
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        updateonce.update('gnd', sys.argv[1])
-    else:
-        updateonce.update('gnd')
-
-    os.system("pause")
+    try:
+        if len(sys.argv) > 1:
+            updateonce.update('gnd', sys.argv[1])
+        else:
+            updateonce.update('gnd')
+    except Exception as err:
+        print("error = " , err)
+    finally:
+        os.system("pause")
