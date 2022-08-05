@@ -5,6 +5,9 @@ import debug_transfer
 import json
 
 if __name__ == "__main__":
-    debug_transfer.transfer_file('sky')
-
-    os.system("pause")
+    try:
+        debug_transfer.transfer_file('sky')
+    except Exception as err:
+        print("error = " , err)
+    finally:
+        os.system("pause")
