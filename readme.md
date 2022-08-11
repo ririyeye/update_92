@@ -3,4 +3,3 @@
     pip install paramiko
     pip install tcping
     pip install scp
-    pip install ftplib

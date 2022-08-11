@@ -7,17 +7,14 @@
 	},
 	"filedbg": "a",
 	"transferdbg": {
-		"file": "test_bb_transport",
+		"file": "test_bb_tun",
 		"sky": [
-			"chmod a+x /tmp/test_bb_transport",
-			"/tmp/test_bb_transport -S /tmp/a -p 13",
-			"md5sum /tmp/a"
+			"chmod a+x /tmp/test_bb_tun",
+			"/tmp/test_bb_tun -i 192.168.100.2 -p 14"
 		],
 		"gnd": [
-			"chmod a+x /tmp/test_bb_transport",
-			"rm /tmp/a",
-			"/tmp/test_bb_transport -R /tmp/a -p 13",
-			"md5sum /tmp/a"
+			"chmod a+x /tmp/test_bb_tun",
+			"/tmp/test_bb_tun -i 192.168.100.1 -p 14"
 		]
 	},
 	"pull_sdk": [

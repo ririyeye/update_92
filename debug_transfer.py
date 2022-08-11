@@ -34,6 +34,9 @@ def transfer_file(nodename):
     nod = js[nodename]
 
     remoteip = nod['ip']
+    if isinstance(remoteip, list):
+        remoteip = remoteip[0]    
+    
     boardusr = nod['usr']
     boardpass = nod['pw']
 
