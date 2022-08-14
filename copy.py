@@ -11,6 +11,9 @@ if __name__ == "__main__":
     nod = js['sky']
 
     remoteip = nod['ip']
+    if isinstance(remoteip, list):
+        remoteip = remoteip[0]    
+    
     boardusr = nod['usr']
     boardpass = nod['pw']
 
@@ -21,8 +24,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         local_file = sys.argv[1]
     else:
-        local_file = upload_filename
+        local_file = 'tmp/' + upload_filename
 
     #upload update file
     fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)
+
     os.system("pause")

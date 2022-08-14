@@ -11,14 +11,6 @@ from time import sleep
 import json
 
 
-def execcmds(remoteip, usr, password, cmds):
-    with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(remoteip, 22, usr, password)
-        for line in cmds:
-            fileopt.execline(ssh, line)
-
 
 if __name__ == "__main__":
     js = fileopt.get_json_cfg('cfg.json')
@@ -50,6 +42,6 @@ if __name__ == "__main__":
     #upload update file
     fileopt.scp_updatefile(remoteip, local_file, remote_filename, boardusr, boardpass)
 
-    execcmds(remoteip, boardusr, boardpass, debugnode['com'])
+    fileopt.execcmds(remoteip, boardusr, boardpass, debugnode['com'])
 
     os.system("pause")

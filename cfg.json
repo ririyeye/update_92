@@ -5,7 +5,7 @@
 		"pw": "hello,wy",
 		"workpath": "/export/yangwang"
 	},
-	"filedbg": "a",
+	"filedbg": "tcpdump",
 	"transferdbg": {
 		"file": "test_bb_tun",
 		"sky": [

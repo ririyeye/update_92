@@ -60,6 +60,14 @@ def scp_updatefile(remoteip, local_file, remote_file, usr, password):
 
     print(remoteip + " upload ok")
 
+def execcmd(remoteip, usr, password, cmds):
+    with paramiko.SSHClient() as ssh:
+        ssh.load_system_host_keys()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(remoteip, 22, usr, password)
+
+        for line in cmds:
+            fileopt.execline(ssh, line)
 
 def execline(ssh, cmd):
     stdin, stdout, stderr = ssh.exec_command(

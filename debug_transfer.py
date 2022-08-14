@@ -10,14 +10,7 @@ import json
 from time import sleep
 
 
-def execcmd(remoteip, usr, password, cmds):
-    with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(remoteip, 22, usr, password)
 
-        for line in cmds:
-            fileopt.execline(ssh, line)
 
 
 def transfer_file(nodename):
@@ -50,6 +43,6 @@ def transfer_file(nodename):
 
     cmds = js['transferdbg'][nodename]
 
-    execcmd(remoteip, boardusr, boardpass, cmds)
+    fileopt.execcmd(remoteip, boardusr, boardpass, cmds)
 
     # updatefirmware.rebootcmd(remoteip, boardusr, boardpass)
