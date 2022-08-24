@@ -59,9 +59,7 @@ if __name__ == "__main__":
 
     ip = '172.16.3.100'
 
-    cmd = ''
-    if "test_program" in board:
-        cmd = board["test_program"]
+    cmd = 'ps | grep p301d | grep -v grep | wc -l'
 
     change_to_update_mode(ip, boardusr, boardpass, 'off' , test_program=cmd)
 
