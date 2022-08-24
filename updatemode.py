@@ -13,15 +13,18 @@ import fileopt
 import updatefirmware
 
 
-def change_to_update_mode(remoteip, usr, password, testmode='off'):
+def change_to_update_mode(remoteip, usr, password, testmode='off' , test_program=''):
     print(remoteip + " try update")
     with paramiko.SSHClient() as ssh:
         ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
+        if test_program == '':
+            test_program="ps | grep ar_wdt | grep -v grep | wc -l"
+
         # 检查wdt,升级模式下没有该程序
-        stdin, stdout, stderr = ssh.exec_command("ps | grep ar_wdt | grep -v grep | wc -l")
+        stdin, stdout, stderr = ssh.exec_command(test_program)
         ps = stdout.readlines()
         retcode = int(ps[0].strip('\n'))
 
@@ -53,8 +56,13 @@ if __name__ == "__main__":
     board = js['gnd']
     boardusr = board['usr']
     boardpass = board['pw']
-    ip = board['ip']
 
-    change_to_update_mode(ip, boardusr, boardpass, 'off')
+    ip = '172.16.3.100'
+
+    cmd = ''
+    if "test_program" in board:
+        cmd = board["test_program"]
+
+    change_to_update_mode(ip, boardusr, boardpass, 'off' , test_program=cmd)
 
     os.system("pause")

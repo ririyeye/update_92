@@ -35,7 +35,10 @@ def update(nodename, force_file='', index=0):
     boardpass = nod['pw']
 
     #check update mode
-    updatemode.change_to_update_mode(remoteip, boardusr, boardpass)
+    cmd = ''  
+    if "test_program" in nod:
+        cmd = nod["test_program"]
+    updatemode.change_to_update_mode(remoteip, boardusr, boardpass , test_program=cmd)
     #download update file
     if force_file == '':
         local_file = 'tmp/' + update_filename
@@ -63,6 +66,6 @@ def update(nodename, force_file='', index=0):
 
 
 if __name__ == "__main__":
-    update('gnd')
+    update('testgnd')
 
     os.system("pause")

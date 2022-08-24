@@ -33,16 +33,22 @@
 			"/tmp/p301d --board_type 1 --stream_type 1 --pipeline 0 --auto_start --transport 10:11:12"
 		]
 	},
+	"testgnd": {
+		"test_program": "ps | grep p301d | grep -v grep | wc -l",
+		"ip": "192.168.3.100",
+		"usr": "root",
+		"pw": "artosyn"
+	},
 	"sky": {
 		"ip": [
-			"192.168.100.101",
+			"192.168.10.104",
 			"192.168.1.100"
 		],
 		"usr": "root",
 		"pw": "artosyn"
 	},
 	"gnd": {
-		"ip": "192.168.10.103",
+		"ip": "192.168.100.101",
 		"usr": "root",
 		"pw": "artosyn"
 	}
