@@ -8,7 +8,7 @@ import shutil
 import sys
 if __name__ == "__main__":
     js = fileopt.get_json_cfg('cfg.json')
-    nod = js['sky']
+    nod = js['gnd']
 
     remoteip = nod['ip']
     if isinstance(remoteip, list):

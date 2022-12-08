@@ -45,7 +45,6 @@ def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
 def scp_updatefile(remoteip, local_file, remote_file, usr, password):
     print("upload updatefile to " + remoteip)
     with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
@@ -62,7 +61,6 @@ def scp_updatefile(remoteip, local_file, remote_file, usr, password):
 
 def execcmd(remoteip, usr, password, cmds):
     with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 

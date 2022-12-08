@@ -16,7 +16,6 @@ import updatefirmware
 def change_to_update_mode(remoteip, usr, password, testmode='off' , test_program=''):
     print(remoteip + " try update")
     with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 

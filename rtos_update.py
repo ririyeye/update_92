@@ -14,7 +14,6 @@ debug_filename = "a7_rtos.nonsec.img"
 
 def execcmd(remoteip, usr, password):
     with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 

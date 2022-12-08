@@ -15,7 +15,6 @@ import fileopt
 def updatecmd(remoteip, file, usr, password):
     print(remoteip + " try update")
     with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password)
 
@@ -53,7 +52,6 @@ def rebootcmd_ssh(ssh):
 def rebootcmd(remoteip, usr, password):
     print(remoteip + " try reboot")
     with paramiko.SSHClient() as ssh:
-        ssh.load_system_host_keys()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, usr, password, timeout=10)
 
