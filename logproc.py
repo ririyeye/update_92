@@ -12,7 +12,7 @@ def taketime(elem):
 
 
 def regexproc(gnd, sky):
-    pat = re.compile('^\[(\d+)\]\[\w+\]\[[A-Z]+\] \[(\d+)\] (?:(?!^(?:\[\w+\]){3}).*\n)*', re.MULTILINE)
+    pat = re.compile('^\[(\d+)\]\[\w+\]\[[A-Z]+\] \[(\d+)\] (?:(?!^(?:\[\w+\]){3} \[\d+\]).*\n)*', re.MULTILINE)
     timlist = []
 
     for match in pat.finditer(gnd):
@@ -32,14 +32,16 @@ def regexproc(gnd, sky):
         for logs in timlist:
             if lastdev != str(logs[1]):
                 lastdev = str(logs[1])
+                f.write('\n\n')
+            else:
                 f.write('\n')
 
             f.write(logs[0])
             f.write(' ')
             f.write(logs[1])
             f.write(' ')
-            f.write(logs[2])
-
+            write2 = str(logs[2]).rstrip('\n')
+            f.write(write2)
 
 if __name__ == "__main__":
     with open("gnd.txt", 'r') as f0, open("sky.txt", 'r') as f1:
