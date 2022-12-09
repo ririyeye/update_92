@@ -10,26 +10,40 @@ import re
 def taketime(elem):
     return elem[0]
 
-def regexproc(dat):
-    pat = re.compile('^\[(\d+)\]\[\w+\]\[ALWAYS\] (?:(?!^(?:\[\w+\]){3}).*\n)*', re.MULTILINE)
 
+def regexproc(gnd, sky):
+    pat = re.compile('^\[(\d+)\]\[\w+\]\[[A-Z]+\] \[(\d+)\] (?:(?!^(?:\[\w+\]){3}).*\n)*', re.MULTILINE)
     timlist = []
 
-    for match in pat.finditer(dat):
+    for match in pat.finditer(gnd):
         grp = match.group()
         tim = match.group(1)
-        timlist.append((tim, grp))
+        timlist.append((tim, 'gnd', grp))
+
+    for match in pat.finditer(sky):
+        grp = match.group()
+        tim = match.group(2)
+        timlist.append((tim, 'sky', grp))
 
     timlist.sort(key=taketime)
+    lastdev = 'null'
+    with open("out.txt", 'w') as f:
+        f.truncate()
+        for logs in timlist:
+            if lastdev != str(logs[1]):
+                lastdev = str(logs[1])
+                f.write('\n')
 
-    for logs in timlist:
-        print(logs[0], logs[1])
+            f.write(logs[0])
+            f.write(' ')
+            f.write(logs[1])
+            f.write(' ')
+            f.write(logs[2])
 
 
 if __name__ == "__main__":
-
-    with open("1.txt", 'r') as f:
-        print("read file name = " + f.name)
-        dat = f.read()
-        regexproc(dat)
-    os.system("pause")
+    with open("gnd.txt", 'r') as f0, open("sky.txt", 'r') as f1:
+        gnd = f0.read()
+        sky = f1.read()
+        regexproc(gnd, sky)
+    # os.system("pause")
