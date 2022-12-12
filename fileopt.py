@@ -7,6 +7,7 @@ from scp import SCPClient
 import json
 import fileopt
 from time import sleep
+import io
 
 
 class cb_info(object):
@@ -35,9 +36,12 @@ def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
         if not os.path.exists(path):
             os.mkdir(path)
 
-        with open(localname, 'wb') as f:
-            cbi = cb_info(f, ftpsize)
-            ftp.retrbinary('RETR ' + server_filename, cbi.callback, blocksize=128 * 1024)
+        mem = io.BytesIO()
+        cbi = cb_info(mem, ftpsize)
+        ftp.retrbinary('RETR ' + server_filename, cbi.callback, blocksize=128 * 1024)
+
+        with open(localname, 'wb') as fil:
+            fil.write(mem.getbuffer())
 
     print("download ok!")
 
@@ -59,6 +63,7 @@ def scp_updatefile(remoteip, local_file, remote_file, usr, password):
 
     print(remoteip + " upload ok")
 
+
 def execcmd(remoteip, usr, password, cmds):
     with paramiko.SSHClient() as ssh:
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -66,6 +71,7 @@ def execcmd(remoteip, usr, password, cmds):
 
         for line in cmds:
             fileopt.execline(ssh, line)
+
 
 def execline(ssh, cmd):
     stdin, stdout, stderr = ssh.exec_command(
