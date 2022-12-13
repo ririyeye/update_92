@@ -17,13 +17,21 @@ def regexproc(gnd, sky):
 
     for match in pat.finditer(gnd):
         grp = match.group()
-        tim = match.group(1)
-        timlist.append((tim, 'gnd', grp))
+        tim1 = match.group(1)
+        tim2 = match.group(2)
+        if tim1 == tim2:
+            continue
+
+        timlist.append((tim1, 'gnd', grp))
 
     for match in pat.finditer(sky):
         grp = match.group()
-        tim = match.group(2)
-        timlist.append((tim, 'sky', grp))
+        tim1 = match.group(1)
+        tim2 = match.group(2)
+        if tim1 == tim2:
+            continue
+        
+        timlist.append((tim2, 'sky', grp))
 
     timlist.sort(key=taketime)
     lastdev = 'null'
