@@ -43,6 +43,11 @@
 		"pw": "artosyn"
 	},
 	"sky": {
+		"test_program":[
+			"ps | grep p301d | grep -v grep | wc -l",
+			"ps | grep \"run.sh nor mtdblock15\" | grep -v grep | wc -l"
+		],
+
 		"ip": [
 			"192.168.10.104",
 			"192.168.213.228"
@@ -51,6 +56,10 @@
 		"pw": "artosyn"
 	},
 	"gnd": {
+		"test_program":[
+			"ps | grep p301d | grep -v grep | wc -l",
+			"ps | grep \"run.sh nor mtdblock15\" | grep -v grep | wc -l"
+		],
 		"ip": "192.168.1.100",
 		"usr": "root",
 		"pw": "artosyn"
