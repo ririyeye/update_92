@@ -18,8 +18,11 @@
 		]
 	},
 	"pull_sdk": [
-		"artosyn-upgrade-sirius-0.0.0.1.img",
 		"sdk-artosyn-videowave-1.0.1.5.tar.gz"
+	],
+	"pull_img": [
+		"artosyn-upgrade-sirius-0.0.0.1.img",
+		"a7_rtos.nonsec.img"
 	],
 	"p301d": {
 		"file": "p301d",
