@@ -55,12 +55,12 @@ def update_rtos(nodename, force_file='', index=0):
 
     if force_file == '':
         remote_file = '/tmp/' + upload_filename
-        fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, debug_filename, local_file)
+        mem = fileopt.ftpdownload_fo(ftpip, ftpcwd, ftpusr, ftppass, debug_filename)
+        fileopt.scp_update_fo(remoteip, mem, remote_file, boardusr, boardpass)
     else:
         remote_file = force_file
-
-    #upload update file
-    fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)
+        #upload update file
+        fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)
 
     execcmd(remoteip, boardusr, boardpass)
 

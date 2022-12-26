@@ -25,6 +25,18 @@ class cb_info(object):
 
 
 def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
+    mem = ftpdownload_fo(remoteip, cwd, usr, password, server_filename)
+
+    if (mem != None):
+        path = os.path.dirname(localname)
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        with open(localname, 'wb') as fil:
+            fil.write(mem.getbuffer())
+
+
+def ftpdownload_fo(remoteip, cwd, usr, password, server_filename):
     print("download " + server_filename)
     with ftplib.FTP() as ftp:
         ftp.connect(remoteip, 21)
@@ -32,21 +44,20 @@ def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
         ftp.cwd(cwd)
         ftpsize = ftp.size(server_filename)
 
-        path = os.path.dirname(localname)
-        if not os.path.exists(path):
-            os.mkdir(path)
-
         mem = io.BytesIO()
         cbi = cb_info(mem, ftpsize)
         ftp.retrbinary('RETR ' + server_filename, cbi.callback, blocksize=128 * 1024)
+        print("download ok!")
 
-        with open(localname, 'wb') as fil:
-            fil.write(mem.getbuffer())
-
-    print("download ok!")
+        return mem
 
 
 def scp_updatefile(remoteip, local_file, remote_file, usr, password):
+    with open(local_file, 'rb') as f:
+        scp_update_fo(remoteip, f, remote_file, usr, password)
+
+
+def scp_update_fo(remoteip, local_fo, remote_file, usr, password):
     print("upload updatefile to " + remoteip)
     with paramiko.SSHClient() as ssh:
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -58,7 +69,8 @@ def scp_updatefile(remoteip, local_file, remote_file, usr, password):
 
         # SCPCLient takes a paramiko transport as an argument
         with SCPClient(ssh.get_transport(), progress=cb) as scp:
-            scp.put(local_file, remote_file)
+            local_fo.seek(0)
+            scp.putfo(local_fo, remote_file)
         print("\n")
 
     print(remoteip + " upload ok")
