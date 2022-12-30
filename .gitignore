@@ -9,3 +9,10 @@ tmp
 a
 sdk
 out.txt
+client/pri_key.pem
+client/pri.ca
+client/pri.csr
+client/server.pfx
+ca/ca.cer
+ca/ca.srl
+ca/pri_key.pem
