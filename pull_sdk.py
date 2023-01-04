@@ -7,7 +7,8 @@ import json
 import sys
 import fileopt
 import shutil
-
+from aio import ftpdl
+import asyncio
 
 if __name__ == "__main__":
     js = fileopt.get_json_cfg('cfg.json')
@@ -24,8 +25,16 @@ if __name__ == "__main__":
 
     if os.path.exists(localpath):
         shutil.rmtree(localpath)
-
-    for file in file_list:
-        fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, file, localpath + file)
+        
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    path = os.path.dirname(localpath + file_list[0])
+    if not os.path.exists(path):
+        os.mkdir(path)
+    
+    tasks = [loop.create_task(ftpdl.ftp_dl_file(ftpip, ftpcwd, ftpusr, ftppass, file,localpath + file)) for file in file_list]
+    
+    loop.run_until_complete(asyncio.gather(*tasks))
 
     os.system("pause")

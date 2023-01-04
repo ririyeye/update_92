@@ -1,6 +1,5 @@
 from aiohttp import web
 import asyncio
-import coms
 import os
 import asyncssh
 import random

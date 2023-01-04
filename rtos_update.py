@@ -1,39 +1,24 @@
 #!/usr/bin/python3
 
 import os
-import fileopt
 
 import updatefirmware
-import paramiko
-from scp import SCPClient
 import json
-from time import sleep
+import asyncio
+from aio import execline
+from aio import ftpdl
+from aio import scpul
+from aio import coms
+
+import tempfile
 
 debug_filename = "a7_rtos.nonsec.img"
 
-
-def execcmd(remoteip, usr, password):
-    with paramiko.SSHClient() as ssh:
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(remoteip, 22, usr, password)
-
-        stdin, stdout, stderr = ssh.exec_command(
-            "#!/bin/sh \n "
-            "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-            "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
-            "/etc/artosyn-upgrade.sh /tmp/a7_rtos.nonsec.img \n ",
-            get_pty=True)
-
-        while not stdout.channel.closed:
-            if stdout.channel.recv_ready():
-                line = stdout.readline(1024)
-                print(line, end="")
-            else:
-                sleep(0.1)
+updatecmd = '/etc/artosyn-upgrade.sh /tmp/a7_rtos.nonsec.img \n'
 
 
-def update_rtos(nodename, force_file='', index=0):
-    js = fileopt.get_json_cfg('cfg.json')
+async def _update_rtos(nodename, force_file='', index=0):
+    js = coms.get_json_cfg('../cfg.json')
     ftpcfg = js['ftp']
 
     ftpip = ftpcfg['ip']
@@ -53,15 +38,33 @@ def update_rtos(nodename, force_file='', index=0):
     boardusr = nod['usr']
     boardpass = nod['pw']
 
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
     if force_file == '':
         remote_file = '/tmp/' + upload_filename
-        mem = fileopt.ftpdownload_fo(ftpip, ftpcwd, ftpusr, ftppass, debug_filename)
-        fileopt.scp_update_fo(remoteip, mem, remote_file, boardusr, boardpass)
+        dat = await ftpdl.ftp_get_file(ftpip, ftpcwd, ftpusr, ftppass, upload_filename)
+        name = ''
+        with tempfile.NamedTemporaryFile('wb',delete=False) as f:
+            name = f.name
+            f.write(dat.getbuffer())
+        await scpul.scp_upload(remoteip, name, remote_file, boardusr, boardpass)
+        os.unlink(name)
     else:
         remote_file = force_file
         #upload update file
-        fileopt.scp_updatefile(remoteip, local_file, remote_file, boardusr, boardpass)
+        await scpul.scp_upload(remoteip, force_file, remote_file, boardusr, boardpass)
 
-    execcmd(remoteip, boardusr, boardpass)
+    # execline.execlines(remoteip, boardusr, boardpass)
 
     updatefirmware.rebootcmd(remoteip, boardusr, boardpass)
+
+def update_rtos(nodename, force_file='', index=0):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    t = loop.create_task(_update_rtos(nodename, force_file, index))
+    loop.run_until_complete(t)
+    
+    os.system("pause")
