@@ -26,7 +26,7 @@ def execline2(ssh, cmd):
             line = stdout.readline(10240)
             out += line
         else:
-            sleep(0.1)
+            sleep(0.01)
 
     while True:
         ret2 = stdout.readline()
@@ -60,20 +60,19 @@ def get_bit(ssh,addr ,bit):
     return dat & (1 << bit)
 
 def dump(ssh,filename):
-    cmd = ""
-
-    for page in range(0,3):
-        for addr in range(0,64):
-            ra = 0x60680000 + page * 0x100 + addr * 4
-            cmd += "echo 0x{:x} $(devmem 0x{:x});".format(ra,ra)
-
-    ret = execline2(ssh, cmd)
     with open(filename , 'w') as f:
         f.truncate()
-        f.write(ret)
+        for page in range(0,6):
+            cmd = ""
+            for addr in range(0,64):
+                ra = 0x60680000 + page * 0x100 + addr * 4
+                cmd += "echo 0x{:x} $(devmem 0x{:x});".format(ra,ra)
+
+            ret = execline2(ssh, cmd)
+            f.write(ret)
 
 def debugmode(ssh):
-    ret = execline2(ssh, "/local/usr/bin/rtcmd debug_mode ; sleep 1")
+    ret = execline2(ssh, "/local/usr/bin/rtcmd debug_mode")
     return ret
 
 
