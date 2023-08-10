@@ -37,16 +37,16 @@ def execline(ssh, cmd):
 if __name__ == "__main__":
     boardusr = 'root'
     boardpass = 'artosyn'
-    boardip = '192.168.10.100'
+    boardip = '192.168.10.101'
 
-    cmd = ""
+    cmds = []
 
     for page in range(0,3):
         for addr in range(0,64):
             ra = 0x60680000 + page * 0x100 + addr * 4
-            cmd += "devmem 0x{:x};".format(ra)
+            cmds.append("devmem 0x{:x}".format(ra))
 
-    output = execcmd(boardip,boardusr,boardpass,[cmd])
+    output = execcmd(boardip,boardusr,boardpass,cmds)
 
     for out in output:
         print(out[0].lstrip('devmem '),":",out[1].rstrip('\n'))
