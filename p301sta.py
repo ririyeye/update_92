@@ -116,7 +116,10 @@ def get_bw_from_val(val):
     bw = {0: "1.25MHZ", 1: "2.5MHZ", 2: "5MHZ",
           3: "10MHZ", 4: "20MHZ", 5: "40MHZ"}
 
-    return bw[val]
+    try:
+        return bw[val]
+    except Exception as err:
+        return "unknown with reg val = {}".format(val)
 
 
 def print_bandwidth(regdict):
@@ -127,7 +130,6 @@ def print_bandwidth(regdict):
     val = regdict[0x150]["valint"] >> 24 & 0xff
     val = val & 0x07
     print("rx slot0 bw = {}".format(get_bw_from_val(val)))
-
 
 
 if __name__ == "__main__":
