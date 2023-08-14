@@ -11,3 +11,6 @@ sdk
 out.txt
 before.txt
 after.txt
+build
+dist
+*.spec
