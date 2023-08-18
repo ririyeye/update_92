@@ -26,7 +26,8 @@
 		"bb_api.h",
 		"ioctl_tab.c",
 		"bb_config.h",
-		"a7_rtos.nonsec.img"
+		"a7_rtos.nonsec.img",
+		"sdk-artosyn-videowave-1.0.1.1.tar.gz"
 	],
 	"p301d": {
 		"file": "p301d",
@@ -63,7 +64,7 @@
 			"ps | grep p301d | grep -v grep | wc -l",
 			"ps | grep \"run.sh nor mtdblock15\" | grep -v grep | wc -l"
 		],
-		"ip": "192.168.10.101",
+		"ip": "192.168.10.100",
 		"usr": "root",
 		"pw": "artosyn"
 	}
