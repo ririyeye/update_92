@@ -27,7 +27,8 @@
 		"ioctl_tab.c",
 		"bb_config.h",
 		"a7_rtos.nonsec.img",
-		"sdk-artosyn-videowave-1.0.1.1.tar.gz"
+		"libar_bb_multi_user.so",
+		"sdk-artosyn-videowave-1.0.1.5.tar.gz"
 	],
 	"p301d": {
 		"file": "p301d",

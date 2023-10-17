@@ -135,7 +135,7 @@ def print_bandwidth(regdict):
 if __name__ == "__main__":
     boardusr = 'root'
     boardpass = 'artosyn'
-    boardip = '192.168.10.101'
+    boardip = '192.168.10.100'
 
     regdict = get_all_reg(boardip, boardusr, boardpass, fetchtab)
 

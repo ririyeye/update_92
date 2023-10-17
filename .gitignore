@@ -3,14 +3,10 @@ __pycache__
 p301d
 test_bb_cfg
 *.img
-sky.txt
-gnd.txt
 tmp
 a
 sdk
-out.txt
-before.txt
-after.txt
 build
 dist
 *.spec
+*.txt
