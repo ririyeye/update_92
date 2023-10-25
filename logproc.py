@@ -8,11 +8,12 @@ import re
 
 
 def taketime(elem):
-    return elem[0]
+    return int(elem[0])
 
 
 def regexproc(gnd, sky):
-    pat = re.compile('^\[(\d+)\]\[\w+\]\[[A-Z]+\] \[(\d+)\] (?:(?!^(?:\[\w+\]){3} \[\d+\]).*\n)*', re.MULTILINE)
+    # pat = re.compile('^\[(\d+)\]\[\w+\]\[[A-Z]+\] \[(\d+)\] (?:(?!^(?:\[\w+\]){3} \[\d+\]).*\n)*', re.MULTILINE)
+    pat = re.compile('^\d+-\d+-\d+ \d+:\d+:\d+ \[(\d+)\]\[\w+\]\[[A-Z]+\] \[(\d+)\] (?:(?!^\d+-\d+-\d+ \d+:\d+:\d+ (?:\[\w+\]){3} \[\d+\]).*\n)*', re.MULTILINE)
     timlist = []
 
     for match in pat.finditer(gnd):
