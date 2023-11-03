@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import updateonce
 import json
 import sys
 import re
