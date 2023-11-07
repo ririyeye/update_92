@@ -1,12 +1,21 @@
 #!/usr/bin/python3
 
-from distutils import filelist
+import asyncio
 import os
-import updateonce
-import json
-import sys
+from pathlib import PurePosixPath
+import re
+
 import fileopt
 import shutil
+import fileopt_aio
+
+
+def check_all_sdk(name: PurePosixPath, info: list[str]) -> bool:
+    reglist = re.compile(r'sdk-artosyn-videowave.*')
+    m = reglist.search(name.name)
+    if m:
+        return True
+    return False
 
 
 if __name__ == "__main__":
@@ -18,14 +27,16 @@ if __name__ == "__main__":
     ftpusr = ftpcfg['usr']
     ftppass = ftpcfg['pw']
 
-    file_list = js['pull_sdk']
-
     localpath = 'sdk/'
 
     if os.path.exists(localpath):
         shutil.rmtree(localpath)
 
-    for file in file_list:
-        fileopt.ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, file, localpath + file)
+    os.mkdir(localpath)
+
+    p = fileopt_aio.ftpdownload_async(ftpip, ftpcwd, ftpusr, ftppass,
+                                      check_all_sdk, localpath)
+    lo = asyncio.get_event_loop()
+    lo.run_until_complete(p)
 
     os.system("pause")
