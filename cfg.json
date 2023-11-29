@@ -28,7 +28,13 @@
 		"bb_config.h",
 		"a7_rtos.nonsec.img",
 		"libar_bb_multi_user.so",
-		"sdk-artosyn-videowave-1.0.1.5.tar.gz"
+		"bb_demo.img",
+		"artosyn-upgrade-ar9341.img",
+		"artosyn-upgrade-ar8030.img",
+		"troot_spl.nonsec.img",
+		"uboot.nonsec.img",
+		"bb_config_director.json",
+		"bb_config.json"
 	],
 	"p301d": {
 		"file": "p301d",
