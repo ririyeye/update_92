@@ -6,7 +6,7 @@ from typing import Callable
 import aioftp
 import re
 import aiofiles
-
+import hashlib
 
 def parse_list(b):
     reglist = re.compile(
@@ -46,8 +46,10 @@ class filesync:
 
 async def ftp_download_file(client: aioftp.Client, serverpath, info, localpath,
                             dl_index = -1):
-    async with aiofiles.open(os.path.join(localpath, info['name']),
-                             mode='wb') as f:
+    loname = os.path.join(localpath, info['name'])
+    print("start download" , loname)
+    md5 = hashlib.md5()
+    async with aiofiles.open(loname, mode='wb') as f:
         lk = asyncio.Lock()
         stream = await client.download_stream(serverpath)
         async with asyncio.TaskGroup() as tg:
@@ -55,12 +57,12 @@ async def ftp_download_file(client: aioftp.Client, serverpath, info, localpath,
             async for block in stream.iter_by_block(128 * 1024):
                 # if dl_index >= 0:
                 #     stdscr
-
+                md5.update(block)
                 syn = filesync(lk, f, offset, block)
                 offset = offset + len(block)
                 tg.create_task(syn.writer())
         await stream.finish()
-
+    print(loname , "download finish , md5sum =" , md5.hexdigest())
 
 class dl_group():
 
