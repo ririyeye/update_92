@@ -66,6 +66,14 @@
 		"usr": "root",
 		"pw": "artosyn"
 	},
+	"fpvgnd": {
+		"test_program":[
+			"ps | grep \"boot_assist /dev/mtdblock14\" | grep -v grep | wc -l"
+		],
+		"ip": "192.168.3.101",
+		"usr": "root",
+		"pw": "artosyn"
+	},
 	"gnd": {
 		"test_program":[
 			"ps | grep p301d | grep -v grep | wc -l",

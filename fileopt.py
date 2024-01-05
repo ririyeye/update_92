@@ -11,7 +11,6 @@ import io
 
 
 class cb_info(object):
-
     def __init__(self, in_f, in_size):
         self.ftpsize = in_size
         self.f = in_f
@@ -20,19 +19,19 @@ class cb_info(object):
     def callback(self, data):
         self.f.write(data)
         self.download_size = self.download_size + len(data)
-        txt = format(self.download_size / self.ftpsize * 100, '.2f') + '%'
-        print('\r---' + txt, end="")
+        txt = format(self.download_size / self.ftpsize * 100, ".2f") + "%"
+        print("\r---" + txt, end="")
 
 
 def ftpdownload(remoteip, cwd, usr, password, server_filename, localname):
     mem = ftpdownload_fo(remoteip, cwd, usr, password, server_filename)
 
-    if (mem != None):
+    if mem != None:
         path = os.path.dirname(localname)
         if not os.path.exists(path):
             os.mkdir(path)
 
-        with open(localname, 'wb') as fil:
+        with open(localname, "wb") as fil:
             fil.write(mem.getbuffer())
 
 
@@ -46,14 +45,16 @@ def ftpdownload_fo(remoteip, cwd, usr, password, server_filename):
 
         mem = io.BytesIO()
         cbi = cb_info(mem, ftpsize)
-        ftp.retrbinary('RETR ' + server_filename, cbi.callback, blocksize=128 * 1024)
+        ftp.retrbinary(
+            "RETR " + server_filename, cbi.callback, blocksize=128 * 1024
+        )
         print("download ok!")
 
         return mem
 
 
 def scp_updatefile(remoteip, local_file, remote_file, usr, password):
-    with open(local_file, 'rb') as f:
+    with open(local_file, "rb") as f:
         scp_update_fo(remoteip, f, remote_file, usr, password)
 
 
@@ -64,7 +65,7 @@ def scp_update_fo(remoteip, local_fo, remote_file, usr, password):
         ssh.connect(remoteip, 22, usr, password)
 
         def cb(local_file, size, sent):
-            percent = format(sent / size * 100, '.2f') + '%'
+            percent = format(sent / size * 100, ".2f") + "%"
             print("\rcopy ", local_file, percent, end="")
 
         # SCPCLient takes a paramiko transport as an argument
@@ -89,8 +90,11 @@ def execline(ssh, cmd):
     stdin, stdout, stderr = ssh.exec_command(
         "#!/bin/sh \n "
         "export LD_LIBRARY_PATH=/lib:/usr/lib:/local/lib:/local/usr/lib:$LD_LIBRARY_PATH \n"
-        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n" + cmd + " \n",
-        get_pty=True)
+        "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/local/bin/:/local/usr/bin/:/local/usr/sbin:$PATH \n"
+        + cmd
+        + " \n",
+        get_pty=True,
+    )
 
     print("exec " + cmd)
     while not stdout.channel.closed:
@@ -112,21 +116,23 @@ def get_json_cfg(filename):
 
 if __name__ == "__main__":
     filename = "a7_rtos.nonsec.img"
-    js = get_json_cfg('cfg.json')
-    ftpcfg = js['ftp']
+    js = get_json_cfg("cfg.json")
+    ftpcfg = js["ftp"]
 
-    ftpip = ftpcfg['ip']
-    ftpcwd = ftpcfg['workpath']
-    ftpusr = ftpcfg['usr']
-    ftppass = ftpcfg['pw']
+    ftpip = ftpcfg["ip"]
+    ftpcwd = ftpcfg["workpath"]
+    ftpusr = ftpcfg["usr"]
+    ftppass = ftpcfg["pw"]
 
     ftpdownload(ftpip, ftpcwd, ftpusr, ftppass, filename, filename)
 
-    board = js['gnd']
+    board = js["gnd"]
 
-    boardusr = board['usr']
-    boardpass = board['pw']
-    boardip = board['ip']
+    boardusr = board["usr"]
+    boardpass = board["pw"]
+    boardip = board["ip"]
 
-    scp_updatefile(boardip, 'tmp/' + filename, '/tmp/' + filename, boardusr, boardpass)
+    scp_updatefile(
+        boardip, "tmp/" + filename, "/tmp/" + filename, boardusr, boardpass
+    )
     os.system("pause")
