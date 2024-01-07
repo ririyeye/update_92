@@ -54,6 +54,7 @@ def rebootcmd_ssh(ssh):
         'echo "out" > /sys/class/gpio/gpio15/direction \n '
         "echo 0 > /sys/class/gpio/gpio15/value \n"
         "ps \n "
+        "killall ar_wdt_service \n "
         "killall ar_wdt_service2 \n ",
         get_pty=True,
     )
