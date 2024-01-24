@@ -25,11 +25,10 @@ if __name__ == "__main__":
     boardusr = nod["usr"]
     boardpass = nod["pw"]
 
-
     board_tool.httpul.httpulfile_sync_wdt(remoteip, 22, boardusr, boardpass)
     with paramiko.SSHClient() as ssh:
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(remoteip, 22, boardusr, boardpass)
         updatefirmware.rebootcmd_ssh(ssh)
-    
+
     os.system("pause")
